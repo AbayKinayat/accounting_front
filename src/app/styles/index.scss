@@ -1,0 +1,7 @@
+@import "./normalize";
+@import "./global";
+
+html, body, #root, .app {
+  height: 100%;
+  font-family: Roboto, sans-serif;
+}

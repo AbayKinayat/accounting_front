@@ -1,0 +1,15 @@
+.alert {
+  padding: 10px;
+
+  &__error {
+    background: var(--error-color);
+  }
+
+  &__info {
+    background: var(--info--color);
+  }
+
+  &__warning {
+    background: var(--warning-color);
+  }
+}

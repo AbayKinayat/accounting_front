@@ -1,0 +1,27 @@
+.register-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 600px;
+  width: 100%;
+
+  border: 2px solid var(--gray-light);
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 10px;
+
+  &__login,
+  &__password {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  &__title {
+    font-size: var(--font-size-xl);
+    text-align: center;
+  }
+
+  &__alert-error {
+    margin-bottom: 10px;
+  }
+}
