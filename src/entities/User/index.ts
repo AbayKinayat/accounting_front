@@ -6,4 +6,5 @@ export { authByUsername } from "./model/services/authByUsername";
 export { IUserSchema } from "./model/types/IUserSchema"
 export { IUserCreate } from "./model/types/IUserCreate"
 export { registerByUsername } from "./model/services/regiterByUsername";
+export { refreshUser } from "./model/services/refreshUser";
 export { IUser } from "./model/types/IUser"

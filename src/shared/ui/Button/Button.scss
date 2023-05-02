@@ -8,9 +8,7 @@
     outline: none;
   }
 
-  &_loading {
-
-  }
+  &_loading {}
 
   &_action {
     padding: 10px 15px;
@@ -19,6 +17,29 @@
     border: 1px solid var(--gray-dark);
     cursor: pointer;
 
+    &:disabled {
+      background: var(--gray-dark);
+      cursor: no-drop;
+    }
+  }
+
+  &_action:hover,
+  &_action:focus {
+    filter: brightness(1.1);
+    background: var(--brand-light);
+    border: 1px solid var(--brand-dark);
+  }
+
+  
+
+  &_icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    padding: 6px;
+
     &:hover,
     &:focus {
       filter: brightness(1.1);
@@ -26,11 +47,10 @@
       border: 1px solid var(--brand-dark);
     }
 
-
-
-    &:disabled {
-      background: var(--gray-dark);
-      cursor: no-drop;
+    @at-root :is(.active) & {
+      filter: brightness(1.1);
+      background: var(--brand-light);
+      border: 1px solid var(--brand-dark);
     }
   }
 

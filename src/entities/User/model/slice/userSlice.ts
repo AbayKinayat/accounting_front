@@ -3,6 +3,7 @@ import { IUserSchema } from "../types/IUserSchema";
 import { IUser } from "../types/IUser";
 import { authByUsername } from "../services/authByUsername";
 import { registerByUsername } from "../services/regiterByUsername";
+import { refreshUser } from "../services/refreshUser";
 
 const initialState: IUserSchema = {
   user: null,
@@ -57,6 +58,27 @@ const userSlice = createSlice({
     )
     .addCase(
       registerByUsername.rejected,
+      (state, action) => {
+        state.error = action.payload || "";
+        state.loading = false;
+      }
+    )
+    .addCase(
+      refreshUser.pending,
+      (state) => {
+        state.loading = true;
+      }
+    )
+    .addCase(
+      refreshUser.fulfilled,
+      (state, action: PayloadAction<IUser>) => {
+        state.user = action.payload;
+        state.error = "";
+        state.loading = false;
+      }
+    )
+    .addCase(
+      refreshUser.rejected,
       (state, action) => {
         state.error = action.payload || "";
         state.loading = false;
