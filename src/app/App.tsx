@@ -4,6 +4,7 @@ import "./styles/index.scss";
 import { getUserData } from "entities/User/model/selectors/getUserData";
 import { Outlet } from "react-router-dom";
 import { Suspense, useEffect } from "react";
+import { Header } from "widgets/Header";
 
 export const App = () => {
 
@@ -12,7 +13,12 @@ export const App = () => {
   return <div className="app">
     <Suspense fallback="loading">
     {
-      user ? <Outlet /> : <Welcome />
+      user ? 
+      <div>
+        <Header />
+        <Outlet /> 
+      </div>
+      : <Welcome />
     }
     </Suspense>
   </div>
