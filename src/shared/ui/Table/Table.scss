@@ -1,0 +1,36 @@
+.table {
+  display: table;
+  border-collapse: collapse;
+  height: 100%;
+
+  &__container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  &__head &__property {
+    user-select: none;
+    border: 1px solid var(--gray-dark);
+
+    cursor: pointer;
+    transition: .5s ease;
+
+    &:hover {
+      background: var(--brand-light);
+    }
+  }
+
+  &__property {
+    padding: 7px;
+    border-right: 1px solid var(--gray-dark);
+
+    &_number {
+      text-align: right;
+    }
+  }
+
+  &__group {
+    background: var(--gray-light);
+  }
+}
