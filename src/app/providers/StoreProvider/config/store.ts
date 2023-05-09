@@ -1,9 +1,12 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { $api } from "shared/api/api";
 import { userReducer } from "entities/User";
+import { transactionsReducer } from "entities/Transaction";
+import { StateSchema } from "./StateSchema";
 
-const reducers = combineReducers({
-  user: userReducer
+const reducers = combineReducers<StateSchema>({
+  user: userReducer,
+  transactions: transactionsReducer
 })
 
 export const store = configureStore({
@@ -21,4 +24,3 @@ export const store = configureStore({
 })
 
 export type AppDispatch = typeof store.dispatch
-export type StateSchema = ReturnType<typeof store.getState>

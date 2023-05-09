@@ -4,6 +4,7 @@ import { IUser } from "../types/IUser";
 import { authByUsername } from "../services/authByUsername";
 import { registerByUsername } from "../services/regiterByUsername";
 import { refreshUser } from "../services/refreshUser";
+import { logout } from "../services/logout";
 
 const initialState: IUserSchema = {
   user: null,
@@ -79,6 +80,26 @@ const userSlice = createSlice({
     )
     .addCase(
       refreshUser.rejected,
+      (state, action) => {
+        state.error = action.payload || "";
+        state.loading = false;
+      }
+    )
+    .addCase(
+      logout.pending,
+      (state) => {
+        state.loading = true;
+      }
+    )
+    .addCase(
+      logout.fulfilled,
+      (state) => {
+        state.user = null;
+        state.loading = false;
+      }
+    )
+    .addCase(
+      logout.rejected,
       (state, action) => {
         state.error = action.payload || "";
         state.loading = false;

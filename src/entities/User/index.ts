@@ -8,3 +8,4 @@ export { IUserCreate } from "./model/types/IUserCreate"
 export { registerByUsername } from "./model/services/regiterByUsername";
 export { refreshUser } from "./model/services/refreshUser";
 export { IUser } from "./model/types/IUser"
+export { logout } from "./model/services/logout";

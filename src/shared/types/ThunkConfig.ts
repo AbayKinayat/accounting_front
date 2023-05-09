@@ -1,4 +1,4 @@
-import { StateSchema } from "app/providers/StoreProvider/config/store";
+import { StateSchema } from "app/providers/StoreProvider/config/StateSchema";
 import { AxiosInstance } from "axios";
 
 export interface ThunkExtraArg {
@@ -7,5 +7,6 @@ export interface ThunkExtraArg {
 
 export interface ThunkConfig<T> {
   rejectValue: T,
-  extra: ThunkExtraArg
+  extra: ThunkExtraArg,
+  state: StateSchema
 }
