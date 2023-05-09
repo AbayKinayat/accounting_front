@@ -1,7 +1,10 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import "./TransactionsPage.scss";
 import { Table } from "shared/ui/Table/Table";
 import { TransactionGroup } from "./TransactionGroup";
+import { useAppDispatch } from "shared/hooks/useAppDispatch/useAppDispatch";
+import { fetchTransactions, getTransactionsData } from "entities/Transaction";
+import { useSelector } from "react-redux";
 
 const data = [
   {
@@ -46,6 +49,18 @@ const data = [
 const TransactionsPage: FC = () => {
   const [sortField, setSortField] = useState("name");
   const [sortOrder, setSortOrder] = useState(1);
+  const dispatch = useAppDispatch();
+
+  const transactionsData = useSelector(getTransactionsData);
+
+  useEffect(() => {
+    dispatch(fetchTransactions({
+      sortField,
+      sortOrder
+    }));
+  }, [dispatch]);
+
+  console.log("transactionsData", transactionsData);
 
   return <div className="transactions-page">
     <Table
