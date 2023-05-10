@@ -1,10 +1,11 @@
 import { Welcome } from "pages/Welcome"
 import { useSelector } from "react-redux";
-import "./styles/index.scss";
 import { getUserData } from "entities/User/model/selectors/getUserData";
 import { Outlet } from "react-router-dom";
-import { Suspense, useEffect } from "react";
+import { Suspense } from "react";
 import { Header } from "widgets/Header";
+import { AddTransactionModal } from "features/AddTransactionModal";
+import "./styles/index.scss";
 
 export const App = () => {
 
@@ -21,5 +22,6 @@ export const App = () => {
       : <Welcome />
     }
     </Suspense>
+    <AddTransactionModal />
   </div>
 }

@@ -6,9 +6,11 @@ import { Icon } from "../Icon/Icon";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children?: ReactNode,
-  mod?: "action" | "icon",
+  mod?: "action" | "icon" | "tab",
   icon?: string,
-  loading?: boolean
+  loading?: boolean,
+  isActive?: boolean,
+  full?: boolean
 }
 
 export const Button = memo<ButtonProps>(({
@@ -17,6 +19,8 @@ export const Button = memo<ButtonProps>(({
   className,
   loading,
   icon,
+  isActive = false,
+  full,
   ...otherProps
 }) => {
 
@@ -26,6 +30,9 @@ export const Button = memo<ButtonProps>(({
         button_action: mod === "action",
         button_loading: loading,
         button_icon: mod === "icon",
+        button_tab: mod === "tab",
+        button_active: isActive,
+        button_full: full
       })
     }
     {...otherProps}

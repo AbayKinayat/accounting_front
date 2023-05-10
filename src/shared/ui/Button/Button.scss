@@ -1,4 +1,5 @@
 .button {
+  $self: &;
   appearance: none;
   border: none;
   background: transparent;
@@ -30,7 +31,7 @@
     border: 1px solid var(--brand-dark);
   }
 
-  
+
 
   &_icon {
     display: flex;
@@ -54,5 +55,25 @@
       border: 1px solid var(--brand-dark);
     }
   }
+
+  &_tab {
+    cursor: pointer;
+    border: 2px solid var(--gray-dark);
+    padding: 10px;
+    transition: .5s ease;
+
+    &#{$self}_active,
+    &:hover,
+    &:focus {
+      background: var(--brand-light);
+      border-color: var(--brand-dark);
+    }
+  }
+
+  &_full {
+    width: 100%;
+  }
+
+  &_active {}
 
 }

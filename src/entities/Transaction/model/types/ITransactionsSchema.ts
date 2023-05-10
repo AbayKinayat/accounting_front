@@ -6,5 +6,6 @@ export interface ITransactionsSchema {
   limit: number,
   total: number,
   loading: boolean,
-  error: string
+  error: string,
+  isOpen: boolean
 }
