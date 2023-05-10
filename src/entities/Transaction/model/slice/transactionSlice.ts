@@ -9,13 +9,18 @@ const initialState: ITransactionsSchema = {
   limit: 5,
   total: 0,
   error: "",
-  loading: false
+  loading: false,
+  isOpen: false
 }
 
 const transactionSlice = createSlice({
   name: "transactions",
   initialState,
-  reducers: {},
+  reducers: {
+    setIsOpen(state, action: PayloadAction<boolean>) {
+      state.isOpen = action.payload;
+    },
+  },
   extraReducers(builder) {
     return builder
       .addCase(
