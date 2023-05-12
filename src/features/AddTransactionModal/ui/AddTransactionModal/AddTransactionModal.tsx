@@ -5,10 +5,11 @@ import { useSelector } from "react-redux";
 import { getTransactionsIsOpen } from "entities/Transaction/model/selectors/getTransactionsIsOpen";
 import { useForm } from "react-hook-form";
 import { Button } from "shared/ui/Button/Button";
-import { TransactionType } from "shared/types/TransactionType";
 import "./AddTransactionModal.scss";
 import { transactionsActions } from "entities/Transaction";
 import { Input } from "shared/ui/Input/Input";
+import { Datepicker } from "shared/ui/Datepicker/Datepicker";
+import { TransactionCategorySelect } from "entities/TransactionCategory";
 
 export const AddTransactionModal = memo(() => {
 
@@ -16,10 +17,11 @@ export const AddTransactionModal = memo(() => {
 
   const dispatch = useAppDispatch();
   const isOpen = useSelector(getTransactionsIsOpen);
-  const { handleSubmit, register, getValues, control } = useForm({
+  const { handleSubmit, register, control } = useForm({
     defaultValues: {
-      amount: 12332,
-      name: "Transaction 1"
+      amount: 0,
+      name: "",
+      date: 0
     }
   });
 
@@ -40,10 +42,15 @@ export const AddTransactionModal = memo(() => {
     setIsExpense(false);
   }, [])
 
+  const datepicker = useCallback(() => {
+
+  }, [])
+
   return <div className="add">
     <Modal
       isOpen={isOpen}
       onRequestClose={closeModal}
+      appElement={document.body}
       style={{
         content: {
           left: "50%",
@@ -84,7 +91,12 @@ export const AddTransactionModal = memo(() => {
           type="currency"
           {...register("amount", { required: true })}
         />
-
+        <Datepicker
+          label="Дата"
+          control={control}
+          name="date"
+        />
+        <TransactionCategorySelect />
       </form>
     </Modal>
   </div>

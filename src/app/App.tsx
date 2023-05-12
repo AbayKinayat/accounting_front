@@ -5,6 +5,7 @@ import { Outlet } from "react-router-dom";
 import { Suspense } from "react";
 import { Header } from "widgets/Header";
 import { AddTransactionModal } from "features/AddTransactionModal";
+import "react-datepicker/dist/react-datepicker.css";
 import "./styles/index.scss";
 
 export const App = () => {

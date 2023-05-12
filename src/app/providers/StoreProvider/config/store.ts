@@ -3,10 +3,12 @@ import { $api } from "shared/api/api";
 import { userReducer } from "entities/User";
 import { transactionsReducer } from "entities/Transaction";
 import { StateSchema } from "./StateSchema";
+import { transactionCategoryReducer } from "entities/TransactionCategory";
 
 const reducers = combineReducers<StateSchema>({
   user: userReducer,
-  transactions: transactionsReducer
+  transactions: transactionsReducer,
+  transactionCategory: transactionCategoryReducer
 })
 
 export const store = configureStore({

@@ -46,6 +46,7 @@ export const Header = memo<HeaderProps>(({ className }) => {
 
     <Button
       className="header__button header-menu-item"
+      mod="icon"
       onClick={addTransactionClickHandler}
     >
       Добавить транзакцию

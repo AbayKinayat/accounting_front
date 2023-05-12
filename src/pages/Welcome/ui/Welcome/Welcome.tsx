@@ -16,7 +16,7 @@ const Welcome: FC = () => {
 
   useEffect(() => {
       dispatch(refreshUser())
-  }, [dispatch])
+  }, [dispatch]);
 
   return <div className="welcome">
     {
