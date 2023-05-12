@@ -42,10 +42,6 @@ export const AddTransactionModal = memo(() => {
     setIsExpense(false);
   }, [])
 
-  const datepicker = useCallback(() => {
-
-  }, [])
-
   return <div className="add">
     <Modal
       isOpen={isOpen}
@@ -61,43 +57,56 @@ export const AddTransactionModal = memo(() => {
         }
       }}
     >
-      <div className="add-transaction-type">
-        <Button
-          className="add-transaction-type__button"
-          mod="tab"
-          isActive={isExpense}
-          onClick={expenseClickHandler}
-          full
-        >
-          Доход
-        </Button>
-        <Button
-          className="add-transaction-type__button"
-          mod="tab"
-          isActive={!isExpense}
-          onClick={incomeClickHandler}
-          full
-        >
-          Расход
-        </Button>
+      <div className="add-transaction">
+        <div className="add-transaction__type">
+          <Button
+            className="add-transaction-type__button"
+            mod="tab"
+            isActive={isExpense}
+            onClick={expenseClickHandler}
+            full
+          >
+            Доход
+          </Button>
+          <Button
+            className="add-transaction-type__button"
+            mod="tab"
+            isActive={!isExpense}
+            onClick={incomeClickHandler}
+            full
+          >
+            Расход
+          </Button>
+        </div>
+        <form className="add-transaction__form" onSubmit={handleSubmit(onSubmit)}>
+          <Input
+            label="Описание"
+            {...register("name", { required: true })}
+          />
+          <Input
+            label="Сумма"
+            type="currency"
+            {...register("amount", { required: true })}
+          />
+          <Datepicker
+            label="Дата"
+            control={control}
+            name="date"
+          />
+          <TransactionCategorySelect
+            control={control}
+            name="categoryId"
+          />
+          <div className="add-transaction__actions">
+            <Button mod="action">
+              Сохранить
+            </Button>
+            <Button mod="action" onClick={closeModal}>
+              Отменить
+            </Button>
+          </div>
+        </form>
       </div>
-      <form className="add-transaction-form" onSubmit={handleSubmit(onSubmit)}>
-        <Input
-          label="Описание"
-          {...register("name", { required: true })}
-        />
-        <Input
-          label="Сумма"
-          type="currency"
-          {...register("amount", { required: true })}
-        />
-        <Datepicker
-          label="Дата"
-          control={control}
-          name="date"
-        />
-        <TransactionCategorySelect />
-      </form>
     </Modal>
   </div>
 }); 

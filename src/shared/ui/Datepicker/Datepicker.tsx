@@ -35,9 +35,6 @@ export const Datepicker = memo<DatepickerProps>(({
       ref={field.ref}
       selected={field.value}
       onChange={(date, event) => {
-        console.log(field.value);
-        console.log("date", date);
-        console.log("event", event)
         const target = event?.target as HTMLInputElement;
         field.onChange({ ...event, target: { ...target, value: date } })
       }}
@@ -46,7 +43,7 @@ export const Datepicker = memo<DatepickerProps>(({
       autoComplete="off"
       disabled={disabled}
     />
-  ), []);
+  ), [className, actualId, disabled]);
 
   return <div className="datepicker">
     {
