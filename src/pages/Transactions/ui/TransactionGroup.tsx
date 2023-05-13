@@ -10,10 +10,23 @@ interface ITransactionGroup {
   columns: ITableColumn[]
 }
 
+
+const days = ["Вс", "Пон", "Вт", "Ср", "Чт", "Пт", "Сб"];
+
 export const TransactionGroup = memo<ITransactionGroup>(({ columns, items, name }) => {
 
   const amountSum = useMemo(() => {
-    return formatNumber(items.reduce((acc, val) => acc + val.amount, 0));
+    return formatNumber(items.reduce((acc, val) => acc + Number(val.amount), 0));
+  }, [])
+  
+  const formattedDate = useMemo(() => {
+    console.log("name", name)
+    const date = new Date(Number(name) * 1000);
+    const month = date.toLocaleDateString("ru-Ru", { month: "short",  });
+    const day = days[date.getDay()]; 
+    const dayNum = date.getDate()
+
+    return `${day}, ${dayNum} ${month}`
   }, [])
 
   return <tr
@@ -32,7 +45,7 @@ export const TransactionGroup = memo<ITransactionGroup>(({ columns, items, name 
           key={column.field}
         >
           {
-            column.field === "name" ? name : column.field === "amount" ? amountSum : ""
+            column.field === "name" ? formattedDate : column.field === "amount" ? amountSum : ""
           }
         </td>
       ))

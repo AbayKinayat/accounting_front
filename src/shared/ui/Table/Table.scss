@@ -24,11 +24,15 @@
 
   &__property {
     padding: 7px;
-    border-right: 1px solid var(--gray-dark);
+    border: 1px solid var(--gray-dark);
 
     &_number {
       text-align: right;
     }
+  }
+
+  &__property_number &__container {
+    justify-content: flex-end;
   }
 
   &__group {

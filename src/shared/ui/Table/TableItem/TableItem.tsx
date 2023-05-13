@@ -2,6 +2,7 @@ import { memo } from "react";
 import { ITableColumn } from "shared/types/ITable";
 import classNames from "classnames";
 import { TableService } from "../TableService";
+import { Icon } from "shared/ui/Icon/Icon";
 
 interface TableItemProps {
   item: Record<string, any>,
@@ -25,10 +26,17 @@ export const TableItem = memo<TableItemProps>(({ item, columns }) => {
           }
           style={{ width: column.width }}
         >
-          {tableService.formatText(
-            tableService.getText(item, column.field),
-            column.dataType
-          )}
+          <div className="table__container">
+            {
+              column.iconField && <Icon
+                name={tableService.getField(item, column.iconField)}
+              />
+            }
+            {tableService.formatText(
+              tableService.getField(item, column.field),
+              column.dataType
+            )}
+          </div>
         </td>
       )
     }

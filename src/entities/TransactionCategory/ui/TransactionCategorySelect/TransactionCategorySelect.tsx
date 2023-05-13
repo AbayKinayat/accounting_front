@@ -7,13 +7,15 @@ import { Control, FieldPath, FieldValues, RegisterOptions } from "react-hook-for
 interface TransactionCategorySelectProps {
   control: Control<any>,
   name: string,
-  rules?: Omit<RegisterOptions<FieldValues, FieldPath<FieldValues>>, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>
+  rules?: Omit<RegisterOptions<FieldValues, FieldPath<FieldValues>>, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>,
+  disabled?: boolean
 }
 
 export const TransactionCategorySelect = memo<TransactionCategorySelectProps>(({
   control,
   name,
-  rules
+  rules,
+  disabled
 }) => {
   const transactionCategories = useSelector(getTransactionCategoryData);
 
@@ -27,6 +29,7 @@ export const TransactionCategorySelect = memo<TransactionCategorySelectProps>(({
       control={control}
       name={name}
       rules={rules}
+      disabled={disabled}
     />
   </>
 

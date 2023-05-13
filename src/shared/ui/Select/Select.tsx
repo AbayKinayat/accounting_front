@@ -16,7 +16,8 @@ interface SelectProps {
   iconName?: string,
   name: string,
   control: Control<any>,
-  rules?: Omit<RegisterOptions<FieldValues, FieldPath<FieldValues>>, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>
+  rules?: Omit<RegisterOptions<FieldValues, FieldPath<FieldValues>>, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>,
+  disabled?: boolean
 }
 
 type ObjectType = Record<string, any>;
@@ -66,7 +67,8 @@ export const Select = memo<SelectProps>(({
   iconName,
   name,
   control,
-  rules
+  rules,
+  disabled
 }) => {
   const generatedId = useRef(generateUid());
   const actualId = id || generatedId.current;
@@ -104,6 +106,7 @@ export const Select = memo<SelectProps>(({
       onChange={(value) => {
         field.onChange(value);
       }}
+      isDisabled={disabled}
     />
   }, [iconName, options, getOptionLabel, getOptionValue, ])
 

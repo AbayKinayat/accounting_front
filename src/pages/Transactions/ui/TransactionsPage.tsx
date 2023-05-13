@@ -66,7 +66,8 @@ const TransactionsPage: FC = () => {
       sortOrder={sortOrder}
       setSortField={setSortField}
       setSortOrder={setSortOrder}
-      groupBy="createdAt"
+      groupBy="date"
+      groupType="date"
       columns={[
         {
           field: "name",
@@ -74,14 +75,16 @@ const TransactionsPage: FC = () => {
           width: 200,
         },
         {
-          field: "category.name",
+          field: "Category.name",
+          iconField: "Category.iconId",
           name: "Категория",
           width: 100,
         },
         {
-          field: "createdAt",
+          field: "date",
           name: "Дата",
           width: 100,
+          dataType: "date"
         },
         {
           field: "amount",
@@ -91,7 +94,7 @@ const TransactionsPage: FC = () => {
         }
       ]}
       GroupComponent={TransactionGroup}
-      data={data}
+      data={transactionsData}
       keyName="id"
     />
   </div>

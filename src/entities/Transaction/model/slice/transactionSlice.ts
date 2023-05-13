@@ -6,7 +6,7 @@ import { IFetchTransactionsReturn } from "../types/IFetchTransactionsReturn";
 const initialState: ITransactionsSchema = {
   transactions: [],
   page: 1,
-  limit: 5,
+  limit: 10,
   total: 0,
   error: "",
   loading: false,

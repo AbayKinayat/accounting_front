@@ -1,4 +1,4 @@
-import { memo, useCallback } from "react";
+import { memo, useCallback, useState } from "react";
 import Modal from "react-modal";
 import { useAppDispatch } from "shared/hooks/useAppDispatch/useAppDispatch";
 import { useSelector } from "react-redux";
@@ -14,6 +14,7 @@ import { addTransaction } from "features/AddTransactionModal/model/services/addT
 import { ITransactionCreateForm } from "./types";
 import { ITransactionCreate } from "features/AddTransactionModal/model/types/ITransactionCreate";
 import { dateToUt } from "shared/lib/dateToUt/dateToUt";
+import { useSnackbar } from "notistack";
 
 const modalStyles: Modal.Styles = {
   content: {
@@ -30,23 +31,26 @@ const requiredRule = { required: true }
 export const AddTransactionModal = memo(() => {
   const dispatch = useAppDispatch();
   const isOpen = useSelector(getTransactionsIsOpen);
+  const [loading, setLoading] = useState(false);
+  const {enqueueSnackbar} = useSnackbar();
+
   const { handleSubmit, register, control, setValue, watch } = useForm<ITransactionCreateForm>({
     defaultValues: {
       amount: 0,
       name: "",
       date: undefined,
-      typeId: 1,
-      categoryId: undefined 
+      typeId: 2,
+      categoryId: undefined
     }
   });
 
   const onSubmit = useCallback((data: ITransactionCreateForm) => {
-    const requiredData = Object.assign({}, data) as Required<ITransactionCreateForm>;  
+    const requiredData = Object.assign({}, data) as Required<ITransactionCreateForm>;
 
     if (String(requiredData.amount).includes(",")) {
       requiredData.amount = Number(String(data.amount).split(",").join(""));
     } else {
-      requiredData.amount = Number(data.amount); 
+      requiredData.amount = Number(data.amount);
     }
 
     if (requiredData.typeId === 2) {
@@ -55,12 +59,28 @@ export const AddTransactionModal = memo(() => {
 
     const actualData: ITransactionCreate = {
       amount: requiredData.amount,
-      categoryId: requiredData.categoryId.id,
+      name: requiredData.name,
+      categoryId: requiredData.categoryId?.id,
       typeId: requiredData.typeId,
       date: dateToUt(requiredData.date)
     }
 
-    dispatch(addTransaction(actualData));
+    setLoading(true);
+    dispatch(addTransaction(actualData)).then((action) => {
+      setLoading(false);
+      if (action.meta.requestStatus === "fulfilled") {
+        enqueueSnackbar({
+          message: "Вы усппешно создали транзакцию",
+          variant: "success",
+        })
+        closeModal();
+      } else {
+        enqueueSnackbar({
+          message: "Не удалось создать транзакцию",
+          variant: "error",
+        })
+      }
+    });
   }, []);
 
   const closeModal = useCallback(() => {
@@ -110,25 +130,32 @@ export const AddTransactionModal = memo(() => {
           <Input
             label="Описание"
             {...register("name", requiredRule)}
+            disabled={loading}
           />
           <Input
             label="Сумма"
             type="currency"
             {...register("amount", { required: true, min: 1 })}
+            disabled={loading}
           />
           <Datepicker
             label="Дата"
             control={control}
             name="date"
             rules={requiredRule}
+            disabled={loading}
           />
           <TransactionCategorySelect
             control={control}
             name="categoryId"
-            rules={requiredRule}
+            disabled={loading}
           />
           <div className="add-transaction__actions">
-            <Button mod="action">
+            <Button
+              mod="action"
+              loading={loading}
+              disabled={loading}
+            >
               Сохранить
             </Button>
             <Button mod="action" onClick={closeModal}>

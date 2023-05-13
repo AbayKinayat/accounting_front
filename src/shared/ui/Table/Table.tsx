@@ -3,8 +3,10 @@ import { TableColumn } from "./TableColumn/TableColumn";
 import { TableItem } from "./TableItem/TableItem";
 import { ITableColumn } from "../../types/ITable";
 import { ISort } from "../../types/ISort";
-
+import { TableService } from "./TableService";
 import "./Table.scss";
+
+const tableService = new TableService();
 
 interface IGroupComponentProps {
   items: Record<string, any>[],
@@ -20,6 +22,7 @@ interface TableProps {
   GroupComponent?: FC<IGroupComponentProps>,
   keyName: string,
   groupBy?: string,
+  groupType?: "date",
   setSortField?: (field: string) => void,
   setSortOrder?: (order: number) => void
 }
@@ -35,6 +38,7 @@ export const Table = memo<TableProps>(({
   keyName,
   sortField,
   sortOrder,
+  groupType,
   groupBy,
   setSortField,
   setSortOrder,
@@ -52,7 +56,8 @@ export const Table = memo<TableProps>(({
     const groupsMap: Record<string, ITableGroup> = {};
 
     data.forEach(item => {
-      const groupName = item[groupBy];
+      const groupName = tableService.formatGroup(item[groupBy], groupType);
+
       if (groupName && !groupsMap[groupName]) {
         groupsMap[groupName] = {
           name: groupName,
@@ -62,7 +67,8 @@ export const Table = memo<TableProps>(({
     })
 
     data.forEach(item => {
-      const group = groupsMap[item[groupBy]];
+      const groupName = tableService.formatGroup(item[groupBy], groupType);
+      const group = groupsMap[groupName];
       if (group) group.items.push(item);
     })
 
