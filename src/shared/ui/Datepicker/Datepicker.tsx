@@ -1,5 +1,5 @@
 import { ReactElement, memo, useCallback, useRef } from "react";
-import { Control, Controller, ControllerRenderProps, FieldPath, FieldValues } from "react-hook-form";
+import { Control, Controller, ControllerRenderProps, FieldPath, FieldValues, RegisterOptions } from "react-hook-form";
 import DatepickerBase from "react-datepicker";
 import "./Datepicker.scss";
 import { generateUid } from "shared/lib/generatedUid/genearateUid";
@@ -11,6 +11,7 @@ interface DatepickerProps {
   id?: string,
   className?: string,
   disabled?: boolean,
+  rules?: Omit<RegisterOptions<FieldValues, FieldPath<FieldValues>>, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>
 }
 
 export const Datepicker = memo<DatepickerProps>(({
@@ -19,7 +20,8 @@ export const Datepicker = memo<DatepickerProps>(({
   className,
   disabled,
   id,
-  label
+  label,
+  rules
 }) => {
   const generatedId = useRef(generateUid());
   const actualId = id || generatedId.current;
@@ -56,6 +58,7 @@ export const Datepicker = memo<DatepickerProps>(({
       name={name}
       control={control}
       render={RenderComponent}
+      rules={rules}
     />
   </div>
 })

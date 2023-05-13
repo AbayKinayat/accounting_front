@@ -61,8 +61,6 @@ export const Table = memo<TableProps>(({
       }
     })
 
-    console.log("groupsMap", groupsMap);
-
     data.forEach(item => {
       const group = groupsMap[item[groupBy]];
       if (group) group.items.push(item);

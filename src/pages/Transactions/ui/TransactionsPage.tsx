@@ -60,8 +60,6 @@ const TransactionsPage: FC = () => {
     }));
   }, [dispatch]);
 
-  console.log("transactionsData", transactionsData);
-
   return <div className="transactions-page">
     <Table
       sortField={sortField}

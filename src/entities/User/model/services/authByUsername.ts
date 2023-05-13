@@ -13,7 +13,6 @@ export const authByUsername = createAsyncThunk<IUser, IUserCreate, ThunkConfig<s
         refreshToken: string,
         user: IUser
       }>("/auth", data);
-      console.log(response)
 
       if (!response.data) return rejectWithValue("Не предвиденная ошибка");
 

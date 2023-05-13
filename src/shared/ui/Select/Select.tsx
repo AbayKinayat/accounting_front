@@ -4,7 +4,7 @@ import { generateUid } from "shared/lib/generatedUid/genearateUid";
 import { Icon } from "shared/ui/Icon/Icon";
 import SelectBase, { components, type OptionProps, type GroupBase, type CSSObjectWithLabel } from "react-select";
 import "./Select.scss";
-import { Control, Controller, ControllerRenderProps, FieldPath, FieldValues } from "react-hook-form";
+import { Control, Controller, ControllerRenderProps, FieldPath, FieldValues, RegisterOptions } from "react-hook-form";
 
 interface SelectProps {
   label?: string,
@@ -15,13 +15,12 @@ interface SelectProps {
   optionValue: string,
   iconName?: string,
   name: string,
-  control: Control<any>
+  control: Control<any>,
+  rules?: Omit<RegisterOptions<FieldValues, FieldPath<FieldValues>>, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>
 }
 
 type ObjectType = Record<string, any>;
 const SelectOption = memo<OptionProps<ObjectType, false, GroupBase<ObjectType>>>((props) => {
-
-  console.log(props.selectProps)
 
   return <components.Option {...props} className="select__option">
     {
@@ -66,13 +65,17 @@ export const Select = memo<SelectProps>(({
   optionValue,
   iconName,
   name,
-  control
+  control,
+  rules
 }) => {
   const generatedId = useRef(generateUid());
   const actualId = id || generatedId.current;
 
   const getOptionLabel = useCallback((option: Record<string, any>) => option[optionLabel], [optionLabel]);
-  const getOptionValue = useCallback((option: Record<string, any>) => option[optionValue], [optionValue]);
+  const getOptionValue = useCallback((option: Record<string, any>) => {
+    
+    return option[optionValue]
+  }, [optionValue]);
 
   const RenderComponent = useCallback<(arg: {
     field: ControllerRenderProps<FieldValues, FieldPath<FieldValues>>;
@@ -115,6 +118,7 @@ export const Select = memo<SelectProps>(({
       name={name}
       control={control}
       render={RenderComponent}
+      rules={rules}
     />
     
   </div>
