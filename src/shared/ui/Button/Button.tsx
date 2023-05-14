@@ -10,7 +10,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon?: string,
   loading?: boolean,
   isActive?: boolean,
-  full?: boolean
+  full?: boolean,
 }
 
 export const Button = memo<ButtonProps>(({

@@ -6,7 +6,7 @@ import { IFetchTransactionsReturn } from "../types/IFetchTransactionsReturn";
 const initialState: ITransactionsSchema = {
   transactions: [],
   page: 1,
-  limit: 10,
+  limit: 3,
   total: 0,
   error: "",
   loading: false,
@@ -20,6 +20,9 @@ const transactionSlice = createSlice({
     setIsOpen(state, action: PayloadAction<boolean>) {
       state.isOpen = action.payload;
     },
+    setPage(state, action: PayloadAction<number>) {
+      state.page = action.payload;
+    }
   },
   extraReducers(builder) {
     return builder

@@ -1,20 +1,20 @@
 import { memo, useCallback, useState } from "react";
-import Modal from "react-modal";
-import { useAppDispatch } from "shared/hooks/useAppDispatch/useAppDispatch";
 import { useSelector } from "react-redux";
-import { getTransactionsIsOpen } from "entities/Transaction/model/selectors/getTransactionsIsOpen";
 import { useForm } from "react-hook-form";
+import Modal from "react-modal";
+import { useSnackbar } from "notistack";
+import { getTransactionsIsOpen, transactionsActions } from "entities/Transaction";
+import { addTransaction } from "features/AddTransactionModal/model/services/addTransaction";
+import { ITransactionCreate } from "features/AddTransactionModal/model/types/ITransactionCreate";
+import { TransactionCategorySelect } from "entities/TransactionCategory";
+import { useAppDispatch } from "shared/hooks/useAppDispatch/useAppDispatch";
 import { Button } from "shared/ui/Button/Button";
-import "./AddTransactionModal.scss";
-import { transactionsActions } from "entities/Transaction";
 import { Input } from "shared/ui/Input/Input";
 import { Datepicker } from "shared/ui/Datepicker/Datepicker";
-import { TransactionCategorySelect } from "entities/TransactionCategory";
-import { addTransaction } from "features/AddTransactionModal/model/services/addTransaction";
-import { ITransactionCreateForm } from "./types";
-import { ITransactionCreate } from "features/AddTransactionModal/model/types/ITransactionCreate";
 import { dateToUt } from "shared/lib/dateToUt/dateToUt";
-import { useSnackbar } from "notistack";
+
+import { ITransactionCreateForm } from "./types";
+import "./AddTransactionModal.scss";
 
 const modalStyles: Modal.Styles = {
   content: {

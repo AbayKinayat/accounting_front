@@ -72,6 +72,12 @@
       background: var(--brand-light);
       border-color: var(--brand-dark);
     }
+
+    &:disabled {
+      filter: none;
+      background: transparent;
+      border: 2px solid var(--gray-light);
+    }
   }
 
   &_full {

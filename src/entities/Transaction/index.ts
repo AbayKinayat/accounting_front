@@ -5,3 +5,6 @@ export { fetchTransactions } from "./model/services/fetchTransactions";
 export { getTransactionsData } from "./model/selectors/getTransactionsData";
 export { getTransactionsError } from "./model/selectors/getTransactionsError";
 export { getTransactionsLoading } from "./model/selectors/getTransactionsLoading";
+export { getTransactionsPage } from "./model/selectors/getTransactionsPage";
+export { getTransactionsIsOpen } from "./model/selectors/getTransactionsIsOpen";
+export { getTransactionsTotal } from "./model/selectors/getTransactionsTotal";

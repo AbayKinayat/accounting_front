@@ -1,67 +1,57 @@
-import { FC, useEffect, useState } from "react";
-import "./TransactionsPage.scss";
-import { Table } from "shared/ui/Table/Table";
-import { TransactionGroup } from "./TransactionGroup";
-import { useAppDispatch } from "shared/hooks/useAppDispatch/useAppDispatch";
-import { fetchTransactions, getTransactionsData } from "entities/Transaction";
+import { FC, useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { Table } from "shared/ui/Table/Table";
+import { Paginator } from "shared/ui/Paginator/Paginator";
+import { useAppDispatch } from "shared/hooks/useAppDispatch/useAppDispatch";
+import { fetchTransactions, getTransactionsData, getTransactionsPage, getTransactionsTotal, transactionsActions } from "entities/Transaction";
 
-const data = [
-  {
-    id: 1,
-    name: "Transaction 1",
-    category: {
-      name: "Category 1"
-    },
-    createdAt: "12.12.2022",
-    amount: 1000
-  },
-  {
-    id: 2,
-    name: "Transaction 2",
-    category: {
-      name: "Category 2"
-    },
-    createdAt: "12.12.2022",
-    amount: 72622
-  },
-  {
-    id: 3,
-    name: "Transaction 3",
-    category: {
-      name: "Category 3"
-    },
-    createdAt: "12.12.2022",
-    amount: 27
-  },
-  {
-    id: 4,
-    name: "Transaction 4",
-    category: {
-      name: "Category 4"
-    },
-    createdAt: "12.12.2022",
-    amount: 923
-  },
-
-]
+import { TransactionGroup } from "./TransactionGroup";
+import "./TransactionsPage.scss";
+import { useSearchParams } from "react-router-dom";
 
 const TransactionsPage: FC = () => {
   const [sortField, setSortField] = useState("name");
   const [sortOrder, setSortOrder] = useState(1);
   const dispatch = useAppDispatch();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const transactionsData = useSelector(getTransactionsData);
+  const transactionsPage = useSelector(getTransactionsPage);
+  const transactionsTotal = useSelector(getTransactionsTotal);
 
-  useEffect(() => {
+  const getTransactions = () => {
     dispatch(fetchTransactions({
       sortField,
       sortOrder
-    }));
+    }))
+  }
+
+  const changeTransactionsPage = useCallback((page: number) => {
+    dispatch(transactionsActions.setPage(page));
+
+    setSearchParams({
+      page: String(page)
+    })
+
+    getTransactions();
+  }, [dispatch])
+
+  useEffect(() => {
+    if (searchParams.get("page"))
+      dispatch(transactionsActions.setPage(
+        Number(searchParams.get("page"))
+      ));
+
+    getTransactions();
+
+    return () => {
+      dispatch(transactionsActions.setPage(1));
+    }
   }, [dispatch]);
 
   return <div className="transactions-page">
     <Table
+      className="transactions-page__table"
       sortField={sortField}
       sortOrder={sortOrder}
       setSortField={setSortField}
@@ -96,6 +86,11 @@ const TransactionsPage: FC = () => {
       GroupComponent={TransactionGroup}
       data={transactionsData}
       keyName="id"
+    />
+    <Paginator
+      page={transactionsPage}
+      onChange={changeTransactionsPage}
+      total={transactionsTotal}
     />
   </div>
 }

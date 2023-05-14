@@ -5,6 +5,7 @@ import { ITableColumn } from "../../types/ITable";
 import { ISort } from "../../types/ISort";
 import { TableService } from "./TableService";
 import "./Table.scss";
+import classNames from "classnames";
 
 const tableService = new TableService();
 
@@ -16,6 +17,7 @@ interface IGroupComponentProps {
 
 interface TableProps {
   columns: ITableColumn[],
+  className?: string,
   data: any[],
   sortField?: string,
   sortOrder?: number,
@@ -42,7 +44,8 @@ export const Table = memo<TableProps>(({
   groupBy,
   setSortField,
   setSortOrder,
-  GroupComponent
+  GroupComponent,
+  className
 }) => {
 
   const sortHandler = useCallback((sort: ISort) => {
@@ -75,7 +78,7 @@ export const Table = memo<TableProps>(({
     return Object.values(groupsMap);
   }, [groupBy, data]);
 
-  return <table className="table">
+  return <table className={classNames("table", className)}>
     <thead className="table__head">
       <tr className="table__row">
         {
