@@ -2,15 +2,16 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { ThunkConfig } from "shared/types/ThunkConfig";
 import { ITransaction, ITransactionCreate, fetchTransactions } from "entities/Transaction";
 
-export const addTransaction = createAsyncThunk<
+export const editTransaction = createAsyncThunk<
   ITransaction,
   ITransactionCreate,
   ThunkConfig<string>
 >(
-  "transactions/addTransaction",
-  async (data, { extra, rejectWithValue, dispatch }) => {
+  "transactions/editTransaction",
+  async (data, { extra, rejectWithValue, dispatch, getState }) => {
     try {
-      const response = await extra.api.post<ITransaction>("/transactions/create", data);
+      const transactions = getState().transactions;
+      const response = await extra.api.put<ITransaction>(`/transactions/${transactions.editId}`, data);
 
       dispatch(fetchTransactions({ sortField: "date", sortOrder: 1 }));
 

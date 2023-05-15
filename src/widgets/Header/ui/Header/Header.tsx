@@ -47,6 +47,7 @@ export const Header = memo<HeaderProps>(({ className }) => {
     <Button
       className="header__button header-menu-item"
       mod="icon"
+      icon="health"
       onClick={addTransactionClickHandler}
     >
       Добавить транзакцию

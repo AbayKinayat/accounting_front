@@ -15,7 +15,7 @@ interface AuthFormProps {
 
 export const AuthForm = memo<AuthFormProps>(({ className }) => {
 
-  const { register, handleSubmit } = useForm<IUserCreate>();
+  const { register, handleSubmit, control } = useForm<IUserCreate>();
   const dispatch = useAppDispatch();
   const authError = useSelector(getUserError);
   const loading = useSelector(getUserLoading);
@@ -31,14 +31,18 @@ export const AuthForm = memo<AuthFormProps>(({ className }) => {
     <Input
       className="auth-form__login"
       label="Логин"
-      {...register("username", { required: true })}
+      name="username"
+      control={control}
+      rules={{ required: true }}
       disabled={loading}
     />
     <Input
       className="auth-form__password"
       label="Пароль"
       type="password"
-      {...register("password", { required: true })}
+      name="password"
+      control={control}
+      rules={{ required: true }}
       disabled={loading}
     />
     {

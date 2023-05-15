@@ -4,6 +4,7 @@ export interface ITransaction {
   id: number, 
   name: string,
   amount: number,
+  date: number,
   categoryId: number,
   userId: number,
   typeId: number,

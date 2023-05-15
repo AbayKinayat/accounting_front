@@ -1,4 +1,4 @@
-import { memo, useMemo } from "react";
+import { Fragment, memo, useMemo } from "react";
 import "./Paginator.scss";
 import { Button } from "../Button/Button";
 
@@ -8,7 +8,7 @@ interface PaginatorProps {
   onChange: (page: number) => void;
 }
 
-const range = 2;
+const range = 8;
 
 export const Paginator = memo<PaginatorProps>(({
   page,
@@ -75,12 +75,11 @@ export const Paginator = memo<PaginatorProps>(({
     </Button>
     {
       currentPages.map((availablePage, index) => (
-        <>
+        <Fragment key={availablePage}>
           {
-            index === 0 && availablePage > 1 &&  "..."
+            index === 0 && availablePage > 1 && "..."
           }
           <Button
-            key={availablePage}
             onClick={handleChange.bind(null, availablePage)}
             isActive={availablePage === page}
             mod="tab"
@@ -88,9 +87,9 @@ export const Paginator = memo<PaginatorProps>(({
             {availablePage}
           </Button>
           {
-            index + 1 === currentPages.length && availablePage !== total && "..." 
+            index + 1 === currentPages.length && availablePage !== total && "..."
           }
-        </>
+        </Fragment>
       ))
     }
     <Button

@@ -1,10 +1,12 @@
-import { memo, useRef, useCallback, ReactElement } from "react";
+import { memo, useRef, useCallback } from "react";
 import classNames from "classnames";
 import { generateUid } from "shared/lib/generatedUid/genearateUid";
 import { Icon } from "shared/ui/Icon/Icon";
 import SelectBase, { components, type OptionProps, type GroupBase, type CSSObjectWithLabel } from "react-select";
 import "./Select.scss";
-import { Control, Controller, ControllerRenderProps, FieldPath, FieldValues, RegisterOptions } from "react-hook-form";
+import { type Control, Controller } from "react-hook-form";
+import { FormRenderComponent } from "shared/types/FormRenderComponent";
+import { Rules } from "shared/types/Rules";
 
 interface SelectProps {
   label?: string,
@@ -16,7 +18,7 @@ interface SelectProps {
   iconName?: string,
   name: string,
   control: Control<any>,
-  rules?: Omit<RegisterOptions<FieldValues, FieldPath<FieldValues>>, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>,
+  rules?: Rules,
   disabled?: boolean
 }
 
@@ -79,9 +81,7 @@ export const Select = memo<SelectProps>(({
     return option[optionValue]
   }, [optionValue]);
 
-  const RenderComponent = useCallback<(arg: {
-    field: ControllerRenderProps<FieldValues, FieldPath<FieldValues>>;
-  }) => ReactElement>(({ field }) => {
+  const RenderComponent = useCallback<FormRenderComponent>(({ field }) => {
     return <SelectBase
       ref={field.ref}
       value={field.value}

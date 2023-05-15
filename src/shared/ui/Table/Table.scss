@@ -38,4 +38,18 @@
   &__group {
     background: var(--gray-light);
   }
+
+  &__head &__row {
+    &:hover {
+      background: none;
+      filter: none;
+    }
+  }
+
+  &__row {
+    &:hover {
+      background: var(--brand-light);
+      filter: brightness(1.1);
+    }
+  }
 }

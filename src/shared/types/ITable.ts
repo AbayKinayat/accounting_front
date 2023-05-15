@@ -4,4 +4,5 @@ export interface ITableColumn {
   name: string;
   width?: string | number,
   dataType?: "text" | "number" | "date",
+  isCustomSort?: boolean
 }

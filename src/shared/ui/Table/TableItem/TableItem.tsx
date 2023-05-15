@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useCallback } from "react";
 import { ITableColumn } from "shared/types/ITable";
 import classNames from "classnames";
 import { TableService } from "../TableService";
@@ -6,14 +6,21 @@ import { Icon } from "shared/ui/Icon/Icon";
 
 interface TableItemProps {
   item: Record<string, any>,
-  columns: ITableColumn[]
+  columns: ITableColumn[],
+  onSelect?: (item: Record<string, any>) => void
 }
 
 const tableService = new TableService();
 
-export const TableItem = memo<TableItemProps>(({ item, columns }) => {
+export const TableItem = memo<TableItemProps>(({ item, columns, onSelect }) => {
+
+  const clickHandler = useCallback(() => {
+    onSelect?.(item)
+  }, [])
+
   return <tr
     className="table__row"
+    onClick={clickHandler}
   >
     {
       columns.map(column =>

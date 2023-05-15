@@ -15,7 +15,7 @@ interface RegisterFormProps {
 
 export const RegisterForm = memo<RegisterFormProps>(({ className }) => {
 
-  const { register, handleSubmit } = useForm<IUserCreate>({
+  const { register, handleSubmit, control } = useForm<IUserCreate>({
     defaultValues: {
       username: "",
       password: ""
@@ -36,14 +36,18 @@ export const RegisterForm = memo<RegisterFormProps>(({ className }) => {
     <Input
       className="register-form__login"
       label="Логин"
-      {...register("username", { required: true })}
+      name="username"
+      control={control}
+      rules={{ required: true }}
       disabled={authLoading}
     />
     <Input
       className="register-form__password"
       label="Пароль"
       type="password"
-      {...register("password", { required: true })}
+      name="password"
+      control={control}
+      rules={{ required: true }}
       disabled={authLoading}
     />
     {

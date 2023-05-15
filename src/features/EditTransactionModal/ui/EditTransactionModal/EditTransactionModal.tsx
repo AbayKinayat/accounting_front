@@ -1,18 +1,19 @@
-import { memo, useCallback, useState } from "react";
+import { memo, useCallback, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import Modal from "react-modal";
 import { useSnackbar } from "notistack";
-import { ITransactionCreate, ITransactionCreateForm, getTransactionsIsOpen, transactionsActions } from "entities/Transaction";
-import { addTransaction } from "../../model/services/addTransaction";
+import { ITransaction, ITransactionCreate, ITransactionCreateForm, getTransactionsEditId, getTransactionsEditIsOpen, getTransactionsIsOpen, transactionsActions } from "entities/Transaction";
 import { TransactionCategorySelect } from "entities/TransactionCategory";
 import { useAppDispatch } from "shared/hooks/useAppDispatch/useAppDispatch";
 import { Button } from "shared/ui/Button/Button";
 import { Input } from "shared/ui/Input/Input";
 import { Datepicker } from "shared/ui/Datepicker/Datepicker";
 import { dateToUt } from "shared/lib/dateToUt/dateToUt";
+import { $api } from "shared/api/api";
+import { editTransaction } from "../../model/services/editTransaction";
 
-import "./AddTransactionModal.scss";
+import "./EditTranscationModal.scss";
 
 const modalStyles: Modal.Styles = {
   content: {
@@ -26,13 +27,15 @@ const modalStyles: Modal.Styles = {
 
 const requiredRule = { required: true }
 
-export const AddTransactionModal = memo(() => {
+export const EditTransactionModal = memo(() => {
   const dispatch = useAppDispatch();
-  const isOpen = useSelector(getTransactionsIsOpen);
+  const isOpen = useSelector(getTransactionsEditIsOpen);
+  const id = useSelector(getTransactionsEditId);
   const [loading, setLoading] = useState(false);
+  const [getLoading, setGetLoading] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
 
-  const { handleSubmit, control, setValue, watch } = useForm<ITransactionCreateForm>({
+  const { handleSubmit, register, control, setValue, watch } = useForm<ITransactionCreateForm>({
     defaultValues: {
       amount: 0,
       name: "",
@@ -64,7 +67,7 @@ export const AddTransactionModal = memo(() => {
     }
 
     setLoading(true);
-    dispatch(addTransaction(actualData)).then((action) => {
+    dispatch(editTransaction(actualData)).then((action) => {
       setLoading(false);
       if (action.meta.requestStatus === "fulfilled") {
         enqueueSnackbar({
@@ -82,7 +85,7 @@ export const AddTransactionModal = memo(() => {
   }, []);
 
   const closeModal = useCallback(() => {
-    dispatch(transactionsActions.setIsOpen(false));
+    dispatch(transactionsActions.setEditIsOpen(false));
   }, [dispatch])
 
   const expenseClickHandler = useCallback(() => {
@@ -94,9 +97,34 @@ export const AddTransactionModal = memo(() => {
   }, [])
 
   const typeId = watch('typeId');
+  useEffect(() => {
+    if (id) {
+      setGetLoading(true);
+      $api.post<ITransaction>(`/transactions/${id}`)
+        .then(response => {
+          const transaction = response.data;
+          setValue("amount", Math.abs(transaction.amount));
+          setValue("categoryId", transaction.Category || undefined);
+          setValue("name", transaction.name);
+          setValue("typeId", transaction.typeId);
+          setValue("date", new Date(transaction.date * 1000))
+        })
+        .catch(() => {
+          enqueueSnackbar({
+            message: "Не удалось получить транзакцию",
+            variant: 'error'
+          });
+          closeModal();
+        })
+        .finally(() => {
+          setGetLoading(false);
+        })
+    }
+  }, [id])
+
+  // const amountRegisterregister = register("amount", { required: true, min: 1 })
 
   return <div className="add">
-
     <Modal
       isOpen={isOpen}
       onRequestClose={closeModal}
