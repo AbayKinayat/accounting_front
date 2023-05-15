@@ -4,6 +4,7 @@ import { App } from 'app/App';
 import { StoreProvider } from 'app/providers/StoreProvider/ui/StoreProvider/StoreProvider';
 import { RouterProvider } from 'react-router-dom';
 import { router } from 'app/providers/Router/config/router';
+import { SnackbarProvider } from 'notistack';
 
 const rootEl = document.getElementById("root");
 
@@ -12,9 +13,11 @@ if (rootEl) {
   root.render(
     <React.StrictMode>
       <StoreProvider>
-        <RouterProvider 
-          router={router}
-        />
+        <SnackbarProvider>
+          <RouterProvider
+            router={router}
+          />
+        </SnackbarProvider>
       </StoreProvider>
     </React.StrictMode>
   )

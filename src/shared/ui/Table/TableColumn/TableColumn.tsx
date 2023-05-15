@@ -18,9 +18,6 @@ export const TableColumn = memo<TableColumnProps>(({
 }) => {
 
   const sortHandler = useCallback(() => {
-    console.log("sortField", sortField);
-    console.log("sortOrder", sortOrder);
-    console.log("nextSortOrder", sortOrder ? sortOrder * -1 : 1)
     const nextSort: ISort = {
       order: sortOrder ? sortOrder * -1 : 1,
       field: column.field

@@ -1,4 +1,7 @@
 .button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   $self: &;
   appearance: none;
   border: none;
@@ -65,8 +68,15 @@
     &#{$self}_active,
     &:hover,
     &:focus {
+      filter: brightness(1.1);
       background: var(--brand-light);
       border-color: var(--brand-dark);
+    }
+
+    &:disabled {
+      filter: none;
+      background: transparent;
+      border: 2px solid var(--gray-light);
     }
   }
 

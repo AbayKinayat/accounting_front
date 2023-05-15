@@ -7,5 +7,7 @@ export interface ITransactionsSchema {
   total: number,
   loading: boolean,
   error: string,
-  isOpen: boolean
+  isOpen: boolean,
+  editIsOpen: boolean,
+  editId: number | undefined
 }

@@ -1,0 +1,34 @@
+.datepicker {
+  display: flex;
+  flex-direction: column;
+
+  &__label {
+    font-weight: 500;
+    margin-bottom: 7px;
+  }
+
+  input {
+    flex: 1 0 auto;
+    border: 1px solid var(--gray-dark);
+    border-radius: 5px;
+    padding: 8px 10px;
+
+    &:focus,
+    &:hover {
+      border: 1px solid var(--brand-dark);
+      outline: none;
+    }
+  }
+
+  .react-datepicker {
+
+    &-wrapper {
+      width: auto;
+    }
+  
+    &__input-container {
+      display: flex;
+    }
+  }
+}
+

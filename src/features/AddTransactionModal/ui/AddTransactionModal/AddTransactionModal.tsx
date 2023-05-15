@@ -1,31 +1,84 @@
 import { memo, useCallback, useState } from "react";
-import Modal from "react-modal";
-import { useAppDispatch } from "shared/hooks/useAppDispatch/useAppDispatch";
 import { useSelector } from "react-redux";
-import { getTransactionsIsOpen } from "entities/Transaction/model/selectors/getTransactionsIsOpen";
 import { useForm } from "react-hook-form";
+import Modal from "react-modal";
+import { useSnackbar } from "notistack";
+import { ITransactionCreate, ITransactionCreateForm, getTransactionsIsOpen, transactionsActions } from "entities/Transaction";
+import { addTransaction } from "../../model/services/addTransaction";
+import { TransactionCategorySelect } from "entities/TransactionCategory";
+import { useAppDispatch } from "shared/hooks/useAppDispatch/useAppDispatch";
 import { Button } from "shared/ui/Button/Button";
-import { TransactionType } from "shared/types/TransactionType";
-import "./AddTransactionModal.scss";
-import { transactionsActions } from "entities/Transaction";
 import { Input } from "shared/ui/Input/Input";
+import { Datepicker } from "shared/ui/Datepicker/Datepicker";
+import { dateToUt } from "shared/lib/dateToUt/dateToUt";
+
+import "./AddTransactionModal.scss";
+
+const modalStyles: Modal.Styles = {
+  content: {
+    left: "50%",
+    top: "50%",
+    transform: "translate(-50%, -50%)",
+    maxWidth: 500,
+    height: "60vh"
+  }
+}
+
+const requiredRule = { required: true }
 
 export const AddTransactionModal = memo(() => {
-
-  const [isExpense, setIsExpense] = useState(true);
-
   const dispatch = useAppDispatch();
   const isOpen = useSelector(getTransactionsIsOpen);
-  const { handleSubmit, register, getValues, control } = useForm({
+  const [loading, setLoading] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
+
+  const { handleSubmit, control, setValue, watch } = useForm<ITransactionCreateForm>({
     defaultValues: {
-      amount: 12332,
-      name: "Transaction 1"
+      amount: 0,
+      name: "",
+      date: undefined,
+      typeId: 2,
+      categoryId: undefined
     }
   });
 
+  const onSubmit = useCallback((data: ITransactionCreateForm) => {
+    const requiredData = Object.assign({}, data) as Required<ITransactionCreateForm>;
 
-  const onSubmit = useCallback((data: any) => {
+    if (String(requiredData.amount).includes(",")) {
+      requiredData.amount = Number(String(data.amount).split(",").join(""));
+    } else {
+      requiredData.amount = Number(data.amount);
+    }
 
+    if (requiredData.typeId === 2) {
+      requiredData.amount = -Math.abs(requiredData.amount);
+    }
+
+    const actualData: ITransactionCreate = {
+      amount: requiredData.amount,
+      name: requiredData.name,
+      categoryId: requiredData.categoryId?.id,
+      typeId: requiredData.typeId,
+      date: dateToUt(requiredData.date)
+    }
+
+    setLoading(true);
+    dispatch(addTransaction(actualData)).then((action) => {
+      setLoading(false);
+      if (action.meta.requestStatus === "fulfilled") {
+        enqueueSnackbar({
+          message: "Вы усппешно создали транзакцию",
+          variant: "success",
+        })
+        closeModal();
+      } else {
+        enqueueSnackbar({
+          message: "Не удалось создать транзакцию",
+          variant: "error",
+        })
+      }
+    });
   }, []);
 
   const closeModal = useCallback(() => {
@@ -33,59 +86,86 @@ export const AddTransactionModal = memo(() => {
   }, [dispatch])
 
   const expenseClickHandler = useCallback(() => {
-    setIsExpense(true);
+    setValue("typeId", 2);
   }, [])
 
   const incomeClickHandler = useCallback(() => {
-    setIsExpense(false);
+    setValue("typeId", 1);
   }, [])
 
+  const typeId = watch('typeId');
+
   return <div className="add">
+
     <Modal
       isOpen={isOpen}
       onRequestClose={closeModal}
-      style={{
-        content: {
-          left: "50%",
-          top: "50%",
-          transform: "translate(-50%, -50%)",
-          maxWidth: 500,
-          height: "60vh"
-        }
-      }}
+      appElement={document.body}
+      style={modalStyles}
     >
-      <div className="add-transaction-type">
-        <Button
-          className="add-transaction-type__button"
-          mod="tab"
-          isActive={isExpense}
-          onClick={expenseClickHandler}
-          full
-        >
-          Доход
-        </Button>
-        <Button
-          className="add-transaction-type__button"
-          mod="tab"
-          isActive={!isExpense}
-          onClick={incomeClickHandler}
-          full
-        >
-          Расход
-        </Button>
+      <div className="add-transaction">
+        <div className="add-transaction__type">
+          <Button
+            className="add-transaction-type__button"
+            mod="tab"
+            isActive={typeId === 2}
+            onClick={expenseClickHandler}
+            full
+          >
+            Расход
+          </Button>
+          <Button
+            className="add-transaction-type__button"
+            mod="tab"
+            isActive={typeId === 1}
+            onClick={incomeClickHandler}
+            full
+          >
+            Доход
+          </Button>
+        </div>
+        <form className="add-transaction__form" onSubmit={handleSubmit(onSubmit)}>
+          <Input
+            label="Описание"
+            name="name"
+            control={control}
+            rules={requiredRule}
+            disabled={loading}
+          />
+          <Input
+            label="Сумма"
+            type="currency"
+            name="amount"
+            control={control}
+            rules={{ required: true, min: 1 }}
+            disabled={loading}
+          />
+          <Datepicker
+            label="Дата"
+            control={control}
+            name="date"
+            rules={requiredRule}
+            disabled={loading}
+          />
+          <TransactionCategorySelect
+            control={control}
+            name="categoryId"
+            disabled={loading}
+          />
+          <div className="add-transaction__actions">
+            <Button
+              mod="action"
+              loading={loading}
+              disabled={loading}
+            >
+              Сохранить
+            </Button>
+            <Button mod="action" onClick={closeModal}>
+              Отменить
+            </Button>
+          </div>
+        </form>
       </div>
-      <form className="add-transaction-form" onSubmit={handleSubmit(onSubmit)}>
-        <Input
-          label="Описание"
-          {...register("name", { required: true })}
-        />
-        <Input
-          label="Сумма"
-          type="currency"
-          {...register("amount", { required: true })}
-        />
-
-      </form>
     </Modal>
   </div>
 }); 

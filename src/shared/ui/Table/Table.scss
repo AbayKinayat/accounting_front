@@ -17,20 +17,39 @@
     transition: .5s ease;
 
     &:hover {
+      filter: brightness(1.1);
       background: var(--brand-light);
     }
   }
 
   &__property {
     padding: 7px;
-    border-right: 1px solid var(--gray-dark);
+    border: 1px solid var(--gray-dark);
 
     &_number {
       text-align: right;
     }
   }
 
+  &__property_number &__container {
+    justify-content: flex-end;
+  }
+
   &__group {
     background: var(--gray-light);
+  }
+
+  &__head &__row {
+    &:hover {
+      background: none;
+      filter: none;
+    }
+  }
+
+  &__row {
+    &:hover {
+      background: var(--brand-light);
+      filter: brightness(1.1);
+    }
   }
 }

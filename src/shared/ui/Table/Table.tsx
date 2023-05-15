@@ -1,10 +1,14 @@
-import { FC, Fragment, memo, useCallback, useMemo } from "react";
+import { FC, Fragment, memo, useCallback, useMemo, useState } from "react";
 import { TableColumn } from "./TableColumn/TableColumn";
 import { TableItem } from "./TableItem/TableItem";
 import { ITableColumn } from "../../types/ITable";
 import { ISort } from "../../types/ISort";
-
+import { TableService } from "./TableService";
 import "./Table.scss";
+import classNames from "classnames";
+import { checkTypesAndSort } from "shared/lib/checkTypesAndSort/checkTypesAndSort";
+
+const tableService = new TableService();
 
 interface IGroupComponentProps {
   items: Record<string, any>[],
@@ -14,14 +18,16 @@ interface IGroupComponentProps {
 
 interface TableProps {
   columns: ITableColumn[],
+  className?: string,
   data: any[],
   sortField?: string,
   sortOrder?: number,
   GroupComponent?: FC<IGroupComponentProps>,
   keyName: string,
   groupBy?: string,
-  setSortField?: (field: string) => void,
-  setSortOrder?: (order: number) => void
+  groupType?: "date",
+  onSort?: (field: string, order: number) => void,
+  onSelect?: (item: any) => void
 }
 
 interface ITableGroup {
@@ -35,24 +41,54 @@ export const Table = memo<TableProps>(({
   keyName,
   sortField,
   sortOrder,
+  groupType,
   groupBy,
-  setSortField,
-  setSortOrder,
-  GroupComponent
+  GroupComponent,
+  className,
+  onSort,
+  onSelect
 }) => {
+  const [lastSortField, setLastSortField] = useState(sortField);
+  const [lastSortOrder, setLastSortOrder] = useState(sortOrder);
 
   const sortHandler = useCallback((sort: ISort) => {
-    setSortField?.(sort.field);
-    setSortOrder?.(sort.order);
+    const isCustomSort = Boolean(columns.find(column => column.field === sort.field)?.isCustomSort);
+
+    if (!isCustomSort) {
+      setLastSortField(sort.field);
+      setLastSortOrder(sort.order);
+    }
+    onSort?.(sort.field, sort.order)
   }, []);
+
+  const sortedData = useMemo(() => {
+    let result = [...data];
+
+    if (lastSortField && lastSortOrder) {
+      const isCustomSort = Boolean(columns.find(column => column.field === lastSortField)?.isCustomSort);
+
+      if (!isCustomSort) result = result.sort((a, b) => {
+        const aField = tableService.getField(a, lastSortField);
+        const bField = tableService.getField(b, lastSortField);
+        return lastSortOrder === 1 ?
+          checkTypesAndSort(aField, bField) :
+          checkTypesAndSort(bField, aField)
+      }
+
+      )
+    }
+
+    return result;
+  }, [data, sortField, sortOrder, columns, lastSortField, lastSortOrder])
 
   const groups = useMemo<ITableGroup[]>(() => {
     if (!groupBy) return [];
 
     const groupsMap: Record<string, ITableGroup> = {};
 
-    data.forEach(item => {
-      const groupName = item[groupBy];
+    sortedData.forEach(item => {
+      const groupName = tableService.formatGroup(item[groupBy], groupType);
+
       if (groupName && !groupsMap[groupName]) {
         groupsMap[groupName] = {
           name: groupName,
@@ -61,17 +97,16 @@ export const Table = memo<TableProps>(({
       }
     })
 
-    console.log("groupsMap", groupsMap);
-
-    data.forEach(item => {
-      const group = groupsMap[item[groupBy]];
+    sortedData.forEach(item => {
+      const groupName = tableService.formatGroup(item[groupBy], groupType);
+      const group = groupsMap[groupName];
       if (group) group.items.push(item);
     })
 
     return Object.values(groupsMap);
-  }, [groupBy, data]);
+  }, [groupBy, sortedData]);
 
-  return <table className="table">
+  return <table className={classNames("table", className)}>
     <thead className="table__head">
       <tr className="table__row">
         {
@@ -94,11 +129,12 @@ export const Table = memo<TableProps>(({
             {
               GroupComponent ?
                 <GroupComponent
+                  key={group.name}
                   name={group.name}
                   items={group.items}
                   columns={columns}
                 /> :
-                <tr className="table__row">
+                <tr key={group.name} className="table__row">
                   <td className="table__property table__group" colSpan={columns.length}>
                     {group.name}
                   </td>
@@ -110,17 +146,19 @@ export const Table = memo<TableProps>(({
                   key={item[keyName]}
                   item={item}
                   columns={columns}
+                  onSelect={onSelect}
                 />
               ))
             }
           </Fragment>)
           )
           :
-          data.map(item => (
+          sortedData.map(item => (
             <TableItem
               key={item[keyName]}
               item={item}
               columns={columns}
+              onSelect={onSelect}
             />
           ))
       }

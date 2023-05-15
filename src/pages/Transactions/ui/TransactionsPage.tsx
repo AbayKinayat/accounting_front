@@ -1,100 +1,118 @@
-import { FC, useEffect, useState } from "react";
-import "./TransactionsPage.scss";
-import { Table } from "shared/ui/Table/Table";
-import { TransactionGroup } from "./TransactionGroup";
-import { useAppDispatch } from "shared/hooks/useAppDispatch/useAppDispatch";
-import { fetchTransactions, getTransactionsData } from "entities/Transaction";
+import { FC, useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { Table } from "shared/ui/Table/Table";
+import { Paginator } from "shared/ui/Paginator/Paginator";
+import { useAppDispatch } from "shared/hooks/useAppDispatch/useAppDispatch";
+import { ITransaction, fetchTransactions, getTransactionsData, getTransactionsPage, getTransactionsTotal, transactionsActions } from "entities/Transaction";
 
-const data = [
-  {
-    id: 1,
-    name: "Transaction 1",
-    category: {
-      name: "Category 1"
-    },
-    createdAt: "12.12.2022",
-    amount: 1000
-  },
-  {
-    id: 2,
-    name: "Transaction 2",
-    category: {
-      name: "Category 2"
-    },
-    createdAt: "12.12.2022",
-    amount: 72622
-  },
-  {
-    id: 3,
-    name: "Transaction 3",
-    category: {
-      name: "Category 3"
-    },
-    createdAt: "12.12.2022",
-    amount: 27
-  },
-  {
-    id: 4,
-    name: "Transaction 4",
-    category: {
-      name: "Category 4"
-    },
-    createdAt: "12.12.2022",
-    amount: 923
-  },
+import { TransactionGroup } from "./TransactionGroup";
+import "./TransactionsPage.scss";
+import { useSearchParams } from "react-router-dom";
+import { ITableColumn } from "shared/types/ITable";
 
+const columns: ITableColumn[] = [
+  {
+    field: "name",
+    name: "Описание",
+    width: 200,
+  },
+  {
+    field: "Category.name",
+    iconField: "Category.iconId",
+    name: "Категория",
+    width: 100,
+  },
+  {
+    field: "date",
+    name: "Дата",
+    width: 100,
+    dataType: "date",
+    isCustomSort: true
+  },
+  {
+    field: "amount",
+    name: "Сумма",
+    width: 100,
+    dataType: "number"
+  }
 ]
 
 const TransactionsPage: FC = () => {
-  const [sortField, setSortField] = useState("name");
+  const [sortField, setSortField] = useState("date");
   const [sortOrder, setSortOrder] = useState(1);
   const dispatch = useAppDispatch();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const transactionsData = useSelector(getTransactionsData);
+  const transactionsPage = useSelector(getTransactionsPage);
+  const transactionsTotal = useSelector(getTransactionsTotal);
+
+  const getTransactions = () => {
+    dispatch(fetchTransactions({
+      sortField: "date",
+      sortOrder
+    }))
+  }
+
+  const sortChange = useCallback((field: string, order: number) => {
+    if (field === "date") {
+      dispatch(fetchTransactions({
+        sortField: "date",
+        sortOrder: order
+      }));
+    }
+
+    setSortField(field);
+    setSortOrder(order);
+  }, [])
+
+
+  const changeTransactionsPage = useCallback((page: number) => {
+    dispatch(transactionsActions.setPage(page));
+
+    setSearchParams({
+      page: String(page)
+    })
+
+    getTransactions();
+  }, [dispatch, sortOrder, sortField])
+
+  const selectHandler = useCallback((item: ITransaction) => {
+    dispatch(transactionsActions.setEditId(item.id));
+    dispatch(transactionsActions.setEditIsOpen(true));
+  }, []);
 
   useEffect(() => {
-    dispatch(fetchTransactions({
-      sortField,
-      sortOrder
-    }));
-  }, [dispatch]);
+    if (searchParams.get("page"))
+      dispatch(transactionsActions.setPage(
+        Number(searchParams.get("page"))
+      ));
 
-  console.log("transactionsData", transactionsData);
+    sortChange(sortField, sortOrder);
+
+    return () => {
+      dispatch(transactionsActions.setPage(1));
+    }
+  }, [dispatch]);
 
   return <div className="transactions-page">
     <Table
-      sortField={sortField}
-      sortOrder={sortOrder}
-      setSortField={setSortField}
-      setSortOrder={setSortOrder}
-      groupBy="createdAt"
-      columns={[
-        {
-          field: "name",
-          name: "Описание",
-          width: 200,
-        },
-        {
-          field: "category.name",
-          name: "Категория",
-          width: 100,
-        },
-        {
-          field: "createdAt",
-          name: "Дата",
-          width: 100,
-        },
-        {
-          field: "amount",
-          name: "Сумма",
-          width: 100,
-          dataType: "number"
-        }
-      ]}
-      GroupComponent={TransactionGroup}
-      data={data}
+      className="transactions-page__table"
+      groupBy="date"
+      groupType="date"
       keyName="id"
+      columns={columns}
+      sortOrder={sortOrder}
+      sortField={sortField}
+      GroupComponent={TransactionGroup}
+      data={transactionsData}
+      onSort={sortChange}
+      onSelect={selectHandler}
+    />
+    <Paginator
+      page={transactionsPage}
+      onChange={changeTransactionsPage}
+      total={transactionsTotal}
     />
   </div>
 }
