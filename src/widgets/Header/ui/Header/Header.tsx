@@ -37,10 +37,10 @@ export const Header = memo<HeaderProps>(({ className }) => {
     <NavLink className="header-menu-item" to="/categories" >
       <Button
         className="header__button"
-        icon="double-check"
+        icon="statistic"
         mod="icon"
       >
-        Категорий
+        Статистика
       </Button>
     </NavLink>
 
