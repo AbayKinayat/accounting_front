@@ -4,5 +4,6 @@ export interface ITransactionCategory {
   iconId: string,
   typeId: number,
   createdAt: string,
-  updatedAt: string
+  updatedAt: string,
+  color: string
 }

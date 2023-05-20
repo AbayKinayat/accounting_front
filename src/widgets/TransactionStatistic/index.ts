@@ -1,0 +1,1 @@
+export { TransactionStatistic } from './ui/TransactionStatistic/TransactionStatistic';

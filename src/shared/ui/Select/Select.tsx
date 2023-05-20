@@ -19,7 +19,8 @@ interface SelectProps {
   name: string,
   control: Control<any>,
   rules?: Rules,
-  disabled?: boolean
+  disabled?: boolean,
+  onChange?: (value: any) => void
 }
 
 type ObjectType = Record<string, any>;
@@ -70,7 +71,8 @@ export const Select = memo<SelectProps>(({
   name,
   control,
   rules,
-  disabled
+  disabled,
+  onChange
 }) => {
   const generatedId = useRef(generateUid());
   const actualId = id || generatedId.current;
@@ -105,10 +107,11 @@ export const Select = memo<SelectProps>(({
       menuPortalTarget={document.body}
       onChange={(value) => {
         field.onChange(value);
+        onChange?.(value);
       }}
       isDisabled={disabled}
     />
-  }, [iconName, options, getOptionLabel, getOptionValue, ])
+  }, [iconName, options, getOptionLabel, getOptionValue, onChange])
 
   return <div className={classNames("select", className)}>
     {
