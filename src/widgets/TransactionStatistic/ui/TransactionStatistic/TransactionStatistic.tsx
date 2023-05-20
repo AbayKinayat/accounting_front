@@ -8,6 +8,35 @@ import { useSelector } from "react-redux";
 import { getTransactionCategoryData } from "entities/TransactionCategory";
 import "./TransactionStatistic.scss";
 import { CustomTooltip } from "../CustomTooltip/CustomTooltip";
+import { DateFilter } from "../DateFilter/DateFilter";
+import { Select } from "shared/ui/Select/Select";
+import { useForm } from "react-hook-form";
+import { DateFilterType } from "../../types/DateFilterType";
+import { getFirstWeekUt } from "widgets/TransactionStatistic/lib/getFirstWeekUt";
+import { getLastWeekUt } from "widgets/TransactionStatistic/lib/getLastWeekUt";
+import { Datepicker } from "shared/ui/Datepicker/Datepicker";
+
+const dateTypes: {
+  name: string,
+  value: DateFilterType
+}[] = [
+    {
+      name: "Месяц",
+      value: "month"
+    },
+    {
+      name: "Неделя",
+      value: "week"
+    },
+    {
+      name: "Год",
+      value: "year"
+    },
+    {
+      name: "В ручную",
+      value: "custom"
+    }
+  ]
 
 export const TransactionStatistic = memo(() => {
   const [data, setData] = useState<ITransactionStatistic[]>([]);
@@ -15,6 +44,9 @@ export const TransactionStatistic = memo(() => {
   const [endUt, setEndUt] = useState(0);
   const [categoriesStates, setCategoriesStates] = useState<Record<string, boolean>>({});
   const categories = useSelector(getTransactionCategoryData);
+
+  const { control, watch } = useForm({ defaultValues: { dateType: { value: "year" } } });
+  const [dateType, setDateType] = useState<DateFilterType>("year")
 
   const filteredCategories = useMemo(() => {
     return categories
@@ -30,6 +62,13 @@ export const TransactionStatistic = memo(() => {
         />
       ))
   }, [categories, categoriesStates]);
+
+  const categoryFilter = useCallback((event: ChangeEvent<HTMLInputElement>, name: string) => {
+    setCategoriesStates({
+      ...categoriesStates,
+      [name]: event.target.checked,
+    });
+  }, [categoriesStates]);
 
   useEffect(() => {
     let startUtValue = startUt;
@@ -59,16 +98,59 @@ export const TransactionStatistic = memo(() => {
     setCategoriesStates(categoryStatesMap);
   }, [categories]);
 
-  const categoryFilter = useCallback((event: ChangeEvent<HTMLInputElement>, name: string) => {
-    setCategoriesStates({
-      ...categoriesStates,
-      [name]: event.target.checked,
-    });
-  }, [categoriesStates]);
+  const dateTypeChangeHandler = useCallback(({ value }: { value: DateFilterType }) => {
+    if (value === "year") {
+      setStartUt(getFirstYearUt(new Date()));
+      setEndUt(getLastYearUt(new Date()));
+    } else if (value === "week") {
+      setStartUt(getFirstWeekUt(new Date()));
+      setEndUt(getLastWeekUt(new Date()));
+    } else if (value === "month") {
+      setStartUt(new Date().setDate(1) / 1000);
+      const endDate = new Date();
+      endDate.setMonth(endDate.getMonth() + 1, 0);
+      setEndUt(endDate.getTime() / 1000);
+    }
+    setDateType(value)
+  }, [startUt, endUt])
 
   if (!categories.length || !data.length) return null
 
   return <div className="transactions-statistic">
+    <div className="transactions-statistic__filter">
+      <DateFilter
+        type={dateType}
+        startUt={startUt}
+        endUt={endUt}
+        setStartUt={setStartUt}
+        setEndUt={setEndUt}
+      />
+      <Select
+        options={dateTypes}
+        optionLabel="name"
+        optionValue="value"
+        control={control}
+        name="dateType"
+        onChange={dateTypeChangeHandler}
+      />
+      {
+        dateType === "custom" &&
+        <>
+          <Datepicker
+            label="c"
+            control={control}
+            name="startUt"
+          />
+          <Datepicker
+            label="по"
+            control={control}
+            name="endUt"
+          />
+        </>
+
+      }
+
+    </div>
     <div className="transactions-statistic__graphic">
       <ResponsiveContainer
         width="100%"
@@ -116,6 +198,5 @@ export const TransactionStatistic = memo(() => {
         ))
       }
     </div>
-
   </div>
 })

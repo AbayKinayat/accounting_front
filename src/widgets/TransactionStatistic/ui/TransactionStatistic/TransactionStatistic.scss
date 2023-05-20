@@ -3,6 +3,15 @@
   display: flex;
   gap: 30px;
 
+  &__filter {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 370px;
+    border: 1px solid var(--gray-dark);
+    padding: 20px;
+  }
+
   &__graphic {
     flex: 1 0 auto;
     padding-top: 20px;
