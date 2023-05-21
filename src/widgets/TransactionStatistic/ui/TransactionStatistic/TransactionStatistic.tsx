@@ -45,7 +45,15 @@ export const TransactionStatistic = memo(() => {
   const [categoriesStates, setCategoriesStates] = useState<Record<string, boolean>>({});
   const categories = useSelector(getTransactionCategoryData);
 
-  const { control, watch } = useForm({ defaultValues: { dateType: { value: "year" } } });
+  const { control, setValue } = useForm<{
+    dateType: { value: DateFilterType },
+    startDate?: Date,
+    endDate?: Date
+  }>({
+    defaultValues: {
+      dateType: { value: "year" }
+    }
+  });
   const [dateType, setDateType] = useState<DateFilterType>("year")
 
   const filteredCategories = useMemo(() => {
@@ -110,9 +118,20 @@ export const TransactionStatistic = memo(() => {
       const endDate = new Date();
       endDate.setMonth(endDate.getMonth() + 1, 0);
       setEndUt(endDate.getTime() / 1000);
+    } else {
+      setValue("startDate", new Date(startUt * 1000));
+      setValue("endDate", new Date(endUt * 1000));
     }
     setDateType(value)
   }, [startUt, endUt])
+
+  const startDateChangeHandler = useCallback((date: Date | null) => {
+    if (date) setStartUt(date.getTime() / 1000);
+  }, [])
+
+  const endDateChangeHandler = useCallback((date: Date | null) => {
+    if (date) setEndUt(date.getTime() / 1000);
+  }, []);
 
   if (!categories.length || !data.length) return null
 
@@ -139,15 +158,16 @@ export const TransactionStatistic = memo(() => {
           <Datepicker
             label="c"
             control={control}
-            name="startUt"
+            name="startDate"
+            onChange={startDateChangeHandler}
           />
           <Datepicker
             label="по"
             control={control}
-            name="endUt"
+            name="endDate"
+            onChange={endDateChangeHandler}
           />
         </>
-
       }
 
     </div>

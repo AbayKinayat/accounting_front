@@ -11,7 +11,8 @@ interface DatepickerProps {
   id?: string,
   className?: string,
   disabled?: boolean,
-  rules?: Omit<RegisterOptions<FieldValues, FieldPath<FieldValues>>, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>
+  rules?: Omit<RegisterOptions<FieldValues, FieldPath<FieldValues>>, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>,
+  onChange?: (date: Date | null) => void
 }
 
 export const Datepicker = memo<DatepickerProps>(({
@@ -21,7 +22,8 @@ export const Datepicker = memo<DatepickerProps>(({
   disabled,
   id,
   label,
-  rules
+  rules,
+  onChange
 }) => {
   const generatedId = useRef(generateUid());
   const actualId = id || generatedId.current;
@@ -39,11 +41,13 @@ export const Datepicker = memo<DatepickerProps>(({
       onChange={(date, event) => {
         const target = event?.target as HTMLInputElement;
         field.onChange({ ...event, target: { ...target, value: date } })
+        onChange?.(date);
       }}
       name={field.name}
       onBlur={field.onBlur}
       autoComplete="off"
       disabled={disabled}
+      dateFormat="dd.MM.yyyy"
     />
   ), [className, actualId, disabled]);
 
