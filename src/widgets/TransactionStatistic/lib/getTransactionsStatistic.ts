@@ -3,6 +3,7 @@ import { $api } from "shared/api/api";
 interface ITransactionsStatisticOptions {
   startUt: number,
   endUt: number,
+  typeId: number
 } 
 
 type GetTransactionsStatisticResponse =  {

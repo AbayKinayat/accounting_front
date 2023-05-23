@@ -15,6 +15,7 @@ import { DateFilterType } from "../../types/DateFilterType";
 import { getFirstWeekUt } from "widgets/TransactionStatistic/lib/getFirstWeekUt";
 import { getLastWeekUt } from "widgets/TransactionStatistic/lib/getLastWeekUt";
 import { Datepicker } from "shared/ui/Datepicker/Datepicker";
+import { ExpenseIncome } from "../ExpenseIncome/ExpenseIncome";
 
 const dateTypes: {
   name: string,
@@ -43,6 +44,7 @@ export const TransactionStatistic = memo(() => {
   const [startUt, setStartUt] = useState(0);
   const [endUt, setEndUt] = useState(0);
   const [categoriesStates, setCategoriesStates] = useState<Record<string, boolean>>({});
+  const [typeId, setTypeId] = useState(2);
   const categories = useSelector(getTransactionCategoryData);
 
   const { control, setValue } = useForm<{
@@ -92,11 +94,12 @@ export const TransactionStatistic = memo(() => {
 
     getTransactionsStatistic({
       startUt: startUtValue,
-      endUt: endUtValue
+      endUt: endUtValue,
+      typeId
     }).then(res => {
       setData(res.data);
     });
-  }, [startUt, endUt]);
+  }, [startUt, , typeId]);
 
   useEffect(() => {
     const categoryStatesMap: Record<string, boolean> = {}
@@ -169,7 +172,10 @@ export const TransactionStatistic = memo(() => {
           />
         </>
       }
-
+      <ExpenseIncome 
+        typeId={typeId}
+        onChange={setTypeId}
+      />
     </div>
     <div className="transactions-statistic__graphic">
       <ResponsiveContainer
