@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ITransactionsSchema } from "../types/ITransactionsSchema";
 import { fetchTransactions } from "../services/fetchTransactions";
 import { IFetchTransactionsReturn } from "../types/IFetchTransactionsReturn";
+import { addTransaction } from "features/AddTransactionModal/model/services/addTransaction";
 
 const initialState: ITransactionsSchema = {
   transactions: [],
@@ -12,7 +13,9 @@ const initialState: ITransactionsSchema = {
   loading: false,
   isOpen: false,
   editIsOpen: false,
-  editId: undefined
+  editId: undefined,
+  getTransactionsWhenCreate: false,
+  createdCount: 0
 }
 
 const transactionSlice = createSlice({
@@ -30,7 +33,10 @@ const transactionSlice = createSlice({
     },
     setEditId(state, action: PayloadAction<number>) {
       state.editId = action.payload;
-    }
+    },
+    setGetTransactionsWhenCreate(state, action: PayloadAction<boolean>) {
+      state.getTransactionsWhenCreate = action.payload;
+    },
   },
   extraReducers(builder) {
     return builder
@@ -53,6 +59,12 @@ const transactionSlice = createSlice({
           state.transactions = action.payload.data;
           state.total = action.payload.totalPage;
           state.loading = false;
+        }
+      )
+      .addCase(
+        addTransaction.fulfilled,
+        (state) => {
+          state.createdCount++;
         }
       )
   },

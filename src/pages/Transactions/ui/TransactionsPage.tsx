@@ -90,10 +90,13 @@ const TransactionsPage: FC = () => {
 
     sortChange(sortField, sortOrder);
 
+    dispatch(transactionsActions.setGetTransactionsWhenCreate(true));
+
     return () => {
       dispatch(transactionsActions.setPage(1));
+      dispatch(transactionsActions.setGetTransactionsWhenCreate(false));
     }
-  }, [dispatch]);
+  }, []);
 
   return <div className="transactions-page">
     <Table

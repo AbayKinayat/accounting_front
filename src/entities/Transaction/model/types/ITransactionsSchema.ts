@@ -9,5 +9,7 @@ export interface ITransactionsSchema {
   error: string,
   isOpen: boolean,
   editIsOpen: boolean,
-  editId: number | undefined
+  editId: number | undefined,
+  getTransactionsWhenCreate: boolean,
+  createdCount: number
 }

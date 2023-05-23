@@ -10,5 +10,6 @@ export { getTransactionsIsOpen } from "./model/selectors/getTransactionsIsOpen";
 export { getTransactionsTotal } from "./model/selectors/getTransactionsTotal";
 export { getTransactionsEditIsOpen } from "./model/selectors/getTransactionsEditIsOpen";
 export { getTransactionsEditId } from "./model/selectors/getTransactionsEditId";
+export { getTransactionsCreatedCount } from "./model/selectors/getTransactionsCreatedCount";
 export { ITransactionCreateForm } from "./model/types/TransactionCreateForm"; 
 export { ITransactionCreate } from "./model/types/ITransactionCreate";

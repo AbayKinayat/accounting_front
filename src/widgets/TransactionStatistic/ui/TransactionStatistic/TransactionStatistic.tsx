@@ -16,6 +16,7 @@ import { getFirstWeekUt } from "widgets/TransactionStatistic/lib/getFirstWeekUt"
 import { getLastWeekUt } from "widgets/TransactionStatistic/lib/getLastWeekUt";
 import { Datepicker } from "shared/ui/Datepicker/Datepicker";
 import { ExpenseIncome } from "../ExpenseIncome/ExpenseIncome";
+import { getTransactionsCreatedCount } from "entities/Transaction";
 
 const dateTypes: {
   name: string,
@@ -46,6 +47,7 @@ export const TransactionStatistic = memo(() => {
   const [categoriesStates, setCategoriesStates] = useState<Record<string, boolean>>({});
   const [typeId, setTypeId] = useState(2);
   const categories = useSelector(getTransactionCategoryData);
+  const transactionsCreatedCount = useSelector(getTransactionsCreatedCount);
 
   const { control, setValue } = useForm<{
     dateType: { value: DateFilterType },
@@ -99,7 +101,7 @@ export const TransactionStatistic = memo(() => {
     }).then(res => {
       setData(res.data);
     });
-  }, [startUt, , typeId]);
+  }, [startUt, endUt, typeId, transactionsCreatedCount]);
 
   useEffect(() => {
     const categoryStatesMap: Record<string, boolean> = {}

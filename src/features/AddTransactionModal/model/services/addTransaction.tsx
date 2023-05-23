@@ -8,14 +8,17 @@ export const addTransaction = createAsyncThunk<
   ThunkConfig<string>
 >(
   "transactions/addTransaction",
-  async (data, { extra, rejectWithValue, dispatch }) => {
+  async (data, { extra, rejectWithValue, dispatch, getState }) => {
     try {
       const response = await extra.api.post<ITransaction>("/transactions/create", data);
 
-      dispatch(fetchTransactions({ sortField: "date", sortOrder: 1 }));
+      const getTransactionsWhenCreate = getState().transactions.getTransactionsWhenCreate;
+      if (getTransactionsWhenCreate) {
+        dispatch(fetchTransactions({ sortField: "date", sortOrder: 1 }));
+      }
 
       return response.data;
-    } catch(e: any) {
+    } catch (e: any) {
       return rejectWithValue(e?.response?.data?.message || "Не предвиленная ошибка");
     }
   }
