@@ -85,15 +85,23 @@ export const Table = memo<TableProps>(({
     if (!groupBy) return [];
 
     const groupsMap: Record<string, ITableGroup> = {};
+    const groups: ITableGroup[] = [];
 
-    sortedData.forEach(item => {
+    if (sortField) {
+      const column = columns.find(column => column.field === sortField);
+      column?.isCustomSort
+    }
+
+    data.forEach(item => {
       const groupName = tableService.formatGroup(item[groupBy], groupType);
 
       if (groupName && !groupsMap[groupName]) {
-        groupsMap[groupName] = {
+        const group = {
           name: groupName,
           items: []
         };
+        groupsMap[groupName] = group;
+        groups.push(group);
       }
     })
 
@@ -103,8 +111,8 @@ export const Table = memo<TableProps>(({
       if (group) group.items.push(item);
     })
 
-    return Object.values(groupsMap);
-  }, [groupBy, sortedData]);
+    return groups;
+  }, [groupBy, sortedData, data]);
 
   return <table className={classNames("table", className)}>
     <thead className="table__head">
