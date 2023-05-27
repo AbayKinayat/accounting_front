@@ -1,5 +1,5 @@
 import { getUserData, refreshUser } from "entities/User"
-import { Children, FC, ReactNode, useEffect } from "react"
+import { FC, ReactNode, useEffect } from "react"
 import { useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { useAppDispatch } from "shared/hooks/useAppDispatch/useAppDispatch"
@@ -18,9 +18,9 @@ export const RequireAuth: FC<RequireAuthProps> = ({ children }) => {
       dispatch(refreshUser()).then((action) => {
         if (action.meta.requestStatus === "rejected") navigate("/");
       });
-    } 
+    }
   }, [dispatch]);
-  
+
   if (user) {
     return <>
       {children}

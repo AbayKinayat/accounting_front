@@ -11,5 +11,9 @@ export interface ITransactionsSchema {
   editIsOpen: boolean,
   editId: number | undefined,
   getTransactionsWhenCreate: boolean,
-  createdCount: number
+  createdCount: number,
+  startUt: number,
+  endUt: number,
+  sortField: string,
+  sortOrder: number
 }

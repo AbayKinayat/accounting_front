@@ -12,7 +12,7 @@ export const removeTransaction = createAsyncThunk<
     try {
       const response = await extra.api.delete(`/transactions/${id}`);
 
-      dispatch(fetchTransactions({ sortField: "date", sortOrder: 1 }));
+      dispatch(fetchTransactions());
 
       return response.data;
     } catch(e: any) {

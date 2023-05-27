@@ -17,7 +17,7 @@ export const refreshUser = createAsyncThunk<IUser, undefined, ThunkConfig<string
 
       localStorage.setItem("token", response.data.accessToken);
 
-      dispatch(fetchTransactionCategories())
+      dispatch(fetchTransactionCategories({}))
 
       return response.data.user;
     } catch (e: any) {

@@ -6,6 +6,7 @@ import { Button } from "shared/ui/Button/Button";
 import { useAppDispatch } from "shared/hooks/useAppDispatch/useAppDispatch";
 import { logout } from "entities/User";
 import { transactionsActions } from "entities/Transaction";
+import { DateFilter } from "../DateFilter/DateFilter";
 
 interface HeaderProps {
   className?: string
@@ -34,13 +35,22 @@ export const Header = memo<HeaderProps>(({ className }) => {
         Транзакции
       </Button>
     </NavLink>
-    <NavLink className="header-menu-item" to="/categories" >
+    <NavLink className="header-menu-item" to="/statistic" >
       <Button
         className="header__button"
         icon="statistic"
         mod="icon"
       >
         Статистика
+      </Button>
+    </NavLink>
+    <NavLink className="header-menu-item" to="/categories" >
+      <Button
+        className="header__button"
+        icon="category"
+        mod="icon"
+      >
+        Категории
       </Button>
     </NavLink>
 
@@ -53,6 +63,10 @@ export const Header = memo<HeaderProps>(({ className }) => {
       Добавить транзакцию
     </Button>
 
+    <DateFilter 
+      type="year"
+    />
+    
     <Button
       className="header__button header-menu-item"
       icon="logout"
@@ -61,6 +75,7 @@ export const Header = memo<HeaderProps>(({ className }) => {
     >
       Выйти
     </Button>
+    
 
   </div>
 })

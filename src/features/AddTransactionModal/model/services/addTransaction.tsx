@@ -14,7 +14,7 @@ export const addTransaction = createAsyncThunk<
 
       const getTransactionsWhenCreate = getState().transactions.getTransactionsWhenCreate;
       if (getTransactionsWhenCreate) {
-        dispatch(fetchTransactions({ sortField: "date", sortOrder: 1 }));
+        dispatch(fetchTransactions());
       }
 
       return response.data;

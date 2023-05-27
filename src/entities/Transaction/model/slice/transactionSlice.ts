@@ -3,6 +3,7 @@ import { ITransactionsSchema } from "../types/ITransactionsSchema";
 import { fetchTransactions } from "../services/fetchTransactions";
 import { IFetchTransactionsReturn } from "../types/IFetchTransactionsReturn";
 import { addTransaction } from "features/AddTransactionModal/model/services/addTransaction";
+import { ITransaction } from "../types/ITransaction";
 
 const initialState: ITransactionsSchema = {
   transactions: [],
@@ -15,7 +16,11 @@ const initialState: ITransactionsSchema = {
   editIsOpen: false,
   editId: undefined,
   getTransactionsWhenCreate: false,
-  createdCount: 0
+  createdCount: 0,
+  startUt: 0,
+  endUt: 0,
+  sortField: "date",
+  sortOrder: -1
 }
 
 const transactionSlice = createSlice({
@@ -37,6 +42,18 @@ const transactionSlice = createSlice({
     setGetTransactionsWhenCreate(state, action: PayloadAction<boolean>) {
       state.getTransactionsWhenCreate = action.payload;
     },
+    setStartUt(state, action: PayloadAction<number>) {
+      state.startUt = action.payload;
+    },
+    setEndUt(state, action: PayloadAction<number>) {
+      state.endUt = action.payload;
+    },
+    setSortOrder(state, action: PayloadAction<number>) {
+      state.sortOrder = action.payload;
+    },
+    setSortField(state, action: PayloadAction<string>) {
+      state.sortField = action.payload;
+    }
   },
   extraReducers(builder) {
     return builder

@@ -1,7 +1,6 @@
 import { memo, useState, useEffect, useCallback, type ChangeEvent, useMemo } from "react";
-import { ResponsiveContainer, LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Line } from "recharts"
-import { getFirstYearUt } from "../../lib/getFirstYearUt";
-import { getLastYearUt } from "../../lib/getLastYearUt";
+import { ResponsiveContainer, LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Line, PieChart, Pie, Cell } from "recharts"
+
 import { getTransactionsStatistic } from "../../lib/getTransactionsStatistic";
 import { ITransactionStatistic } from "../../types/ITransactionStatistic";
 import { useSelector } from "react-redux";
@@ -16,7 +15,12 @@ import { getFirstWeekUt } from "widgets/TransactionStatistic/lib/getFirstWeekUt"
 import { getLastWeekUt } from "widgets/TransactionStatistic/lib/getLastWeekUt";
 import { Datepicker } from "shared/ui/Datepicker/Datepicker";
 import { ExpenseIncome } from "../ExpenseIncome/ExpenseIncome";
-import { getTransactionsCreatedCount } from "entities/Transaction";
+import { getTransactionsCreatedCount, getTransactionsEndUt, getTransactionsStartUt, transactionsActions } from "entities/Transaction";
+import { getFirstYearUt } from "shared/lib/getFirstYearUt/getFirstYearUt";
+import { getLastYearUt } from "shared/lib/getLastYeareUt/getLastYearUt";
+import { useAppDispatch } from "shared/hooks/useAppDispatch/useAppDispatch";
+
+type GraphycType = "dynamic" | "review";
 
 const dateTypes: {
   name: string,
@@ -39,26 +43,40 @@ const dateTypes: {
       value: "custom"
     }
   ]
+const graphicTypes: { name: string, value: GraphycType }[] = [
+  {
+    name: "Динамик",
+    value: "dynamic"
+  },
+  {
+    name: "Обзор",
+    value: "review"
+  }
+]
 
 export const TransactionStatistic = memo(() => {
   const [data, setData] = useState<ITransactionStatistic[]>([]);
-  const [startUt, setStartUt] = useState(0);
-  const [endUt, setEndUt] = useState(0);
+  const startUt = useSelector(getTransactionsStartUt);
+  const endUt = useSelector(getTransactionsEndUt);
   const [categoriesStates, setCategoriesStates] = useState<Record<string, boolean>>({});
   const [typeId, setTypeId] = useState(2);
   const categories = useSelector(getTransactionCategoryData);
   const transactionsCreatedCount = useSelector(getTransactionsCreatedCount);
+  const dispatch = useAppDispatch();
 
-  const { control, setValue } = useForm<{
+  const { control, setValue, watch } = useForm<{
     dateType: { value: DateFilterType },
     startDate?: Date,
-    endDate?: Date
+    endDate?: Date,
+    graphicType: { value: GraphycType }
   }>({
     defaultValues: {
-      dateType: { value: "year" }
+      dateType: { value: "year" },
+      graphicType: { value: "dynamic" }
     }
   });
   const [dateType, setDateType] = useState<DateFilterType>("year")
+  const graphicType = watch("graphicType.value");
 
   const filteredCategories = useMemo(() => {
     return categories
@@ -130,12 +148,24 @@ export const TransactionStatistic = memo(() => {
     setDateType(value)
   }, [startUt, endUt])
 
+  const setStartUt = useCallback((ut: number) => {
+    dispatch(transactionsActions.setStartUt(ut))
+  }, [])
+
+  const setEndUt = useCallback((ut: number) => {
+    dispatch(transactionsActions.setEndUt(ut))
+  }, [])
+
   const startDateChangeHandler = useCallback((date: Date | null) => {
-    if (date) setStartUt(date.getTime() / 1000);
+    if (date) {
+      setStartUt(date.getTime() / 1000)
+    }
   }, [])
 
   const endDateChangeHandler = useCallback((date: Date | null) => {
-    if (date) setEndUt(date.getTime() / 1000);
+    if (date) {
+      setEndUt(date.getTime() / 1000);
+    }
   }, []);
 
   if (!categories.length || !data.length) return null
@@ -174,37 +204,71 @@ export const TransactionStatistic = memo(() => {
           />
         </>
       }
-      <ExpenseIncome 
+      <ExpenseIncome
         typeId={typeId}
         onChange={setTypeId}
       />
+      <Select
+        options={graphicTypes}
+        optionLabel="name"
+        optionValue="value"
+        control={control}
+        name="graphicType"
+      />
     </div>
     <div className="transactions-statistic__graphic">
-      <ResponsiveContainer
-        width="100%"
-        height="100%"
-        className="transactions-statistic"
-      >
-        <LineChart
-          width={500}
-          height={300}
-          data={data}
-          margin={{
-            top: 5,
-            right: 30,
-            left: 20,
-            bottom: 5,
-          }}
+      {
+        graphicType === "dynamic" && <ResponsiveContainer
+          width="100%"
+          height="100%"
+          className="transactions-statistic"
         >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip content={CustomTooltip} />
+          <LineChart
+            width={500}
+            height={300}
+            data={data}
+            margin={{
+              top: 5,
+              right: 30,
+              left: 20,
+              bottom: 5,
+            }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip content={CustomTooltip} />
+            {
+              filteredCategories
+            }
+          </LineChart>
+        </ResponsiveContainer>
+      }
+      {
+        graphicType === "review" && <PieChart width={400} height={400}>
+        <Pie
+          dataKey="value"
+          isAnimationActive={false}
+          cx="50%"
+          cy="50%"
+          outerRadius={80}
+          fill="#8884d8"
+          label
+        >
           {
-            filteredCategories
+            categories.map(category => (
+              <Cell 
+                key={category.id}
+                name={category.name}
+                fill={category.color}
+              />
+            ))
           }
-        </LineChart>
-      </ResponsiveContainer>
+        </Pie>
+        <Tooltip />
+      </PieChart>
+      }
+
     </div>
     <div className="transactions-statistic__legends">
       {

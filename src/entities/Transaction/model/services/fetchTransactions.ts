@@ -1,19 +1,16 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { ITransaction } from "../types/ITransaction";
 import { ThunkConfig } from "shared/types/ThunkConfig";
-import { IFetchTransactionsArg } from "../types/IFetchTransactionArg";
 import { IFetchTransactionsReturn } from "../types/IFetchTransactionsReturn";
 
 export const fetchTransactions = createAsyncThunk<
   IFetchTransactionsReturn,
-  IFetchTransactionsArg,
+  void,
   ThunkConfig<string>
 >(
   "transactions/fetchTransactions",
-  async ({ sortField, sortOrder }, { extra, rejectWithValue, getState }) => {
+  async (_, { extra, rejectWithValue, getState }) => {
     try {
-
-      const { page, limit } = getState().transactions;
+      const { page, limit, sortField, sortOrder } = getState().transactions;
 
       const response = await extra.api.post<IFetchTransactionsReturn>("/transactions", {
         page,
