@@ -1,9 +1,11 @@
 import { $api } from "shared/api/api";
+import { ChartType } from "../types/ChartType";
 
 interface ITransactionsStatisticOptions {
   startUt: number,
   endUt: number,
-  typeId: number
+  typeId: number,
+  chartType: ChartType
 } 
 
 type GetTransactionsStatisticResponse =  {

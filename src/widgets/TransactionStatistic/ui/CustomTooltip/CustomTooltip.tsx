@@ -24,11 +24,6 @@ export const CustomTooltip = ((props: TooltipProps<ValueType, string | number>) 
         className="custom-tooltip__data-item"
       >
         <div className="custom-tooltip__data-item-name">
-          <div
-            className="custom-tooltip__data-item-prefix"
-            style={{ backgroundColor: item.color }}
-          >
-          </div>
           {item.name}:
         </div>
         <div className="custom-tooltip__data-item-value">
