@@ -7,6 +7,7 @@ import { getLastYearUt } from "shared/lib/getLastYeareUt/getLastYearUt";
 import { Table } from "shared/ui/Table/Table";
 import { ITableColumn } from "shared/types/ITable";
 import { useSelector } from "react-redux";
+import { getTransactionsEndUt, getTransactionsStartUt } from "entities/Transaction";
 
 const columns: ITableColumn[] = [
   {
@@ -26,8 +27,9 @@ const columns: ITableColumn[] = [
 
 const Categories: FC = () => {
 
-  const [startUt, setStartUt] = useState(0);
-  const [endUt, setEndUt] = useState(0);
+  const startUt = useSelector(getTransactionsStartUt);
+  const endUt = useSelector(getTransactionsEndUt);
+  
   const [sortField, setSortField] = useState("");
   const [sortOrder, setSortOrder] = useState(0);
   const dispatch = useAppDispatch();
@@ -39,20 +41,9 @@ const Categories: FC = () => {
   }, [])
 
   useEffect(() => {
-    let startUtValue = startUt;
-    let endUtValue = endUt;
-    if (!startUtValue) {
-      startUtValue = getFirstYearUt(new Date());
-      setStartUt(startUtValue);
-    }
-    if (!endUtValue) {
-      endUtValue = getLastYearUt(new Date());
-      setEndUt(endUtValue);
-    }
-
     dispatch(fetchTransactionCategories({
-      startUt: startUtValue,
-      endUt: endUtValue
+      startUt: startUt,
+      endUt: endUt
     }))
   }, [startUt, endUt])
 
