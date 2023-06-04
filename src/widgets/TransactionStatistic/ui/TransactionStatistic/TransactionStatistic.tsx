@@ -1,48 +1,22 @@
 import { memo, useState, useEffect, useCallback, type ChangeEvent, useMemo } from "react";
 import { ResponsiveContainer, LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Line, PieChart, Pie, Cell } from "recharts"
-
 import { getTransactionsStatistic } from "../../lib/getTransactionsStatistic";
 import { ITransactionStatistic } from "../../types/ITransactionStatistic";
 import { useSelector } from "react-redux";
 import { getTransactionCategoryData } from "entities/TransactionCategory";
 import "./TransactionStatistic.scss";
 import { CustomTooltip } from "../CustomTooltip/CustomTooltip";
-import { DateFilter } from "../DateFilter/DateFilter";
 import { Select } from "shared/ui/Select/Select";
 import { useForm } from "react-hook-form";
 import { DateFilterType } from "../../types/DateFilterType";
-import { getFirstWeekUt } from "../../lib/getFirstWeekUt";
-import { getLastWeekUt } from "../../lib/getLastWeekUt";
-import { Datepicker } from "shared/ui/Datepicker/Datepicker";
 import { ExpenseIncome } from "../ExpenseIncome/ExpenseIncome";
-import { getTransactionsCreatedCount, getTransactionsEndUt, getTransactionsStartUt, transactionsActions } from "entities/Transaction";
+import { getTransactionsCreatedCount, getTransactionsDateType, getTransactionsEndUt, getTransactionsStartUt, transactionsActions } from "entities/Transaction";
 import { getFirstYearUt } from "shared/lib/getFirstYearUt/getFirstYearUt";
 import { getLastYearUt } from "shared/lib/getLastYeareUt/getLastYearUt";
 import { useAppDispatch } from "shared/hooks/useAppDispatch/useAppDispatch";
 import { ChartType } from "../../types/ChartType";
 import { ReviewTooltip } from "../ReviewTooltip/ReviewTooltip";
 
-const dateTypes: {
-  name: string,
-  value: DateFilterType
-}[] = [
-    {
-      name: "Месяц",
-      value: "month"
-    },
-    {
-      name: "Неделя",
-      value: "week"
-    },
-    {
-      name: "Год",
-      value: "year"
-    },
-    {
-      name: "В ручную",
-      value: "custom"
-    }
-  ]
 const chartTypes: { name: string, value: ChartType }[] = [
   {
     name: "Динамик",
@@ -65,16 +39,7 @@ export const TransactionStatistic = memo(() => {
   const transactionsCreatedCount = useSelector(getTransactionsCreatedCount);
   const dispatch = useAppDispatch();
 
-  const { control, setValue } = useForm<{
-    dateType: { value: DateFilterType },
-    startDate?: Date,
-    endDate?: Date,
-  }>({
-    defaultValues: {
-      dateType: { value: "year" },
-    }
-  });
-  const [dateType, setDateType] = useState<DateFilterType>("year")
+  const { control } = useForm();
 
   const filteredCategoriesLines = useMemo(() => {
 
@@ -101,8 +66,6 @@ export const TransactionStatistic = memo(() => {
     if (chartType === "dynamic") return []
     return categories.filter(category => categoriesStates[category.name])
   }, [categories, categoriesStates, chartType])
-
-  console.log("reviewChartFilteredData", reviewChartFilteredData)
 
   const categoryFilter = useCallback((event: ChangeEvent<HTMLInputElement>, name: string) => {
     setCategoriesStates({
@@ -141,25 +104,6 @@ export const TransactionStatistic = memo(() => {
     setCategoriesStates(categoryStatesMap);
   }, [categories]);
 
-  const dateTypeChangeHandler = useCallback(({ value }: { value: DateFilterType }) => {
-    if (value === "year") {
-      setStartUt(getFirstYearUt(new Date()));
-      setEndUt(getLastYearUt(new Date()));
-    } else if (value === "week") {
-      setStartUt(getFirstWeekUt(new Date()));
-      setEndUt(getLastWeekUt(new Date()));
-    } else if (value === "month") {
-      setStartUt(new Date().setDate(1) / 1000);
-      const endDate = new Date();
-      endDate.setMonth(endDate.getMonth() + 1, 0);
-      setEndUt(endDate.getTime() / 1000);
-    } else {
-      setValue("startDate", new Date(startUt * 1000));
-      setValue("endDate", new Date(endUt * 1000));
-    }
-    setDateType(value)
-  }, [startUt, endUt])
-
   const setStartUt = useCallback((ut: number) => {
     dispatch(transactionsActions.setStartUt(ut))
   }, [])
@@ -167,18 +111,6 @@ export const TransactionStatistic = memo(() => {
   const setEndUt = useCallback((ut: number) => {
     dispatch(transactionsActions.setEndUt(ut))
   }, [])
-
-  const startDateChangeHandler = useCallback((date: Date | null) => {
-    if (date) {
-      setStartUt(date.getTime() / 1000)
-    }
-  }, [])
-
-  const endDateChangeHandler = useCallback((date: Date | null) => {
-    if (date) {
-      setEndUt(date.getTime() / 1000);
-    }
-  }, []);
 
   const chartTypeChangeHandler = useCallback((chartType: { name: string, value: ChartType }) => {
     setChartType(chartType.value);
@@ -188,38 +120,6 @@ export const TransactionStatistic = memo(() => {
 
   return <div className="transactions-statistic">
     <div className="transactions-statistic__filter">
-      <DateFilter
-        type={dateType}
-        startUt={startUt}
-        endUt={endUt}
-        setStartUt={setStartUt}
-        setEndUt={setEndUt}
-      />
-      <Select
-        options={dateTypes}
-        optionLabel="name"
-        optionValue="value"
-        control={control}
-        name="dateType"
-        onChange={dateTypeChangeHandler}
-      />
-      {
-        dateType === "custom" &&
-        <>
-          <Datepicker
-            label="c"
-            control={control}
-            name="startDate"
-            onChange={startDateChangeHandler}
-          />
-          <Datepicker
-            label="по"
-            control={control}
-            name="endDate"
-            onChange={endDateChangeHandler}
-          />
-        </>
-      }
       <ExpenseIncome
         typeId={typeId}
         onChange={setTypeId}

@@ -63,10 +63,8 @@ export const Header = memo<HeaderProps>(({ className }) => {
       Добавить транзакцию
     </Button>
 
-    <DateFilter 
-      type="year"
-    />
-    
+    <DateFilter />
+
     <Button
       className="header__button header-menu-item"
       icon="logout"
@@ -75,7 +73,7 @@ export const Header = memo<HeaderProps>(({ className }) => {
     >
       Выйти
     </Button>
-    
+
 
   </div>
 })

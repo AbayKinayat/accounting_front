@@ -1,3 +1,4 @@
+import { DateFilterType } from "widgets/Header";
 import { ITransaction } from "./ITransaction";
 
 export interface ITransactionsSchema {
@@ -15,5 +16,6 @@ export interface ITransactionsSchema {
   startUt: number,
   endUt: number,
   sortField: string,
-  sortOrder: number
+  sortOrder: number,
+  dateType: DateFilterType
 }

@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, ReactNode, memo } from "react";
+import { ButtonHTMLAttributes, ReactNode, forwardRef, memo } from "react";
 import classNames from "classnames";
 import "./Button.scss";
 import { Icon } from "../Icon/Icon";
@@ -13,7 +13,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   full?: boolean,
 }
 
-export const Button = memo<ButtonProps>(({
+export const Button = memo(forwardRef<HTMLButtonElement, ButtonProps>(({
   children,
   mod,
   className,
@@ -22,7 +22,7 @@ export const Button = memo<ButtonProps>(({
   isActive = false,
   full,
   ...otherProps
-}) => {
+}, ref) => {
 
   return <button
     className={
@@ -36,12 +36,13 @@ export const Button = memo<ButtonProps>(({
       })
     }
     {...otherProps}
+    ref={ref}
   >
     {
-      icon && <Icon 
+      icon && <Icon
         name={icon}
       />
     }
     {loading && mod === "action" ? "Загрузка..." : children}
   </button>
-}) 
+}))

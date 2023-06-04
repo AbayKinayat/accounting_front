@@ -1,9 +1,10 @@
+import type { DateFilterType } from 'widgets/Header';
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ITransactionsSchema } from "../types/ITransactionsSchema";
 import { fetchTransactions } from "../services/fetchTransactions";
 import { IFetchTransactionsReturn } from "../types/IFetchTransactionsReturn";
 import { addTransaction } from "features/AddTransactionModal/model/services/addTransaction";
-import { ITransaction } from "../types/ITransaction";
+
 
 const initialState: ITransactionsSchema = {
   transactions: [],
@@ -20,7 +21,8 @@ const initialState: ITransactionsSchema = {
   startUt: 0,
   endUt: 0,
   sortField: "date",
-  sortOrder: -1
+  sortOrder: -1,
+  dateType: "year"
 }
 
 const transactionSlice = createSlice({
@@ -53,6 +55,9 @@ const transactionSlice = createSlice({
     },
     setSortField(state, action: PayloadAction<string>) {
       state.sortField = action.payload;
+    },
+    setDateType(state, action: PayloadAction<DateFilterType>) {
+      state.dateType = action.payload
     }
   },
   extraReducers(builder) {
