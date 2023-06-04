@@ -17,11 +17,20 @@ const columns: ITableColumn[] = [
   {
     field: "sum",
     dataType: "number",
-    name: "Сумма"
+    name: "Сумма",
+    width: "200px"
   },
   {
     field: "count",
-    name: "Количество"
+    name: "Количество",
+    dataType: "number",
+    width: "100px"
+  },
+  {
+    field: "percent", 
+    name: "%",
+    dataType: "percent",
+    width: "100px"
   }
 ];
 

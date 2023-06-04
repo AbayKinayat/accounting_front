@@ -28,7 +28,8 @@ export const TableItem = memo<TableItemProps>(({ item, columns, onSelect }) => {
           key={column.field}
           className={
             classNames("table__property", {
-              table__property_number: column.dataType === "number"
+              table__property_number: column.dataType === "number",
+              table__property_percent: column.dataType === "percent",
             })
           }
           style={{ width: column.width }}
