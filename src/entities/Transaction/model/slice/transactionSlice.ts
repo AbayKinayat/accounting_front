@@ -2,7 +2,7 @@ import type { DateFilterType } from 'widgets/Header';
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ITransactionsSchema } from "../types/ITransactionsSchema";
 import { fetchTransactions } from "../services/fetchTransactions";
-import { IFetchTransactionsReturn } from "../types/IFetchTransactionsReturn";
+import { FetchTransactionsReturn } from "../types/FetchTransactionsReturn";
 import { addTransaction } from "features/AddTransactionModal/model/services/addTransaction";
 
 
@@ -77,9 +77,16 @@ const transactionSlice = createSlice({
       )
       .addCase(
         fetchTransactions.fulfilled,
-        (state, action: PayloadAction<IFetchTransactionsReturn>) => {
-          state.transactions = action.payload.data;
-          state.total = action.payload.totalPage;
+        (state, action: PayloadAction<FetchTransactionsReturn>) => {
+          if (Array.isArray(action.payload)) {
+            state.transactions = action.payload;
+            state.total = 0;
+            state
+          } else {
+            state.transactions = action.payload.data;
+            state.total = action.payload.totalPage;
+          }
+          
           state.loading = false;
         }
       )

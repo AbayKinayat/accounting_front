@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import Modal from "react-modal";
 import { useSnackbar } from "notistack";
-import { ITransaction, ITransactionCreate, ITransactionCreateForm, getTransactionsEditId, getTransactionsEditIsOpen, getTransactionsIsOpen, transactionsActions } from "entities/Transaction";
+import { ITransaction, ITransactionCreate, ITransactionCreateForm, fetchTransactions, getTransactionsEditId, getTransactionsEditIsOpen, getTransactionsIsOpen, transactionsActions } from "entities/Transaction";
 import { TransactionCategorySelect } from "entities/TransactionCategory";
 import { useAppDispatch } from "shared/hooks/useAppDispatch/useAppDispatch";
 import { Button } from "shared/ui/Button/Button";
@@ -60,7 +60,8 @@ export const EditTransactionModal = memo(() => {
       requiredData.amount = -Math.abs(requiredData.amount);
     }
 
-    const actualData: ITransactionCreate = {
+    const actualData = {
+      id: Number(id),
       amount: requiredData.amount,
       name: requiredData.name,
       categoryId: requiredData.categoryId?.id,
@@ -72,6 +73,7 @@ export const EditTransactionModal = memo(() => {
     dispatch(editTransaction(actualData)).then((action) => {
       setLoading(false);
       if (action.meta.requestStatus === "fulfilled") {
+        dispatch(fetchTransactions());
         enqueueSnackbar({
           message: "Вы успешно отредактировали транзакцию",
           variant: "success",

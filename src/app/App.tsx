@@ -17,10 +17,10 @@ export const App = () => {
     <Suspense fallback="loading">
       {
         user ?
-          <div>
+          <>
             <Header />
             <Outlet />
-          </div>
+          </>
           : <Welcome />
       }
     </Suspense>
