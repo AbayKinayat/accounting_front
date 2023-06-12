@@ -25,15 +25,13 @@
   &__property {
     padding: 7px;
     border: 1px solid var(--gray-dark);
-
-    &_number {
-      text-align: right;
-    }
   }
 
-  &__property_number &__container {
+  &__property_number &__container, &__property_percent &__container {
     justify-content: flex-end;
   }
+
+   
 
   &__group {
     background: var(--gray-light);

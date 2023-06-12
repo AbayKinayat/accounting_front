@@ -18,7 +18,7 @@ export const authByUsername = createAsyncThunk<IUser, IUserCreate, ThunkConfig<s
 
       localStorage.setItem("token", response.data.accessToken);
 
-      dispatch(fetchTransactionCategories())
+      dispatch(fetchTransactionCategories({}))
 
       return response.data.user;
     } catch (e: any) {

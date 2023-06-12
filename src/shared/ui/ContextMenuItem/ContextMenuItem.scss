@@ -1,0 +1,17 @@
+.context-menu-item { 
+  appearance: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background .2s ease;
+
+  &:hover {
+    background: var(--brand-light);
+  }
+  
+  &:focus {
+    outline: none;
+    background: var(--brand-dark);
+    filter: brightness(1.1);
+  }
+}

@@ -16,7 +16,7 @@ export const registerByUsername = createAsyncThunk<IUser, IUserCreate, ThunkConf
 
       if (!response.data) return rejectWithValue("Не предвиденная ошибка");
 
-      dispatch(fetchTransactionCategories())
+      dispatch(fetchTransactionCategories({}))
 
       localStorage.setItem("token", response.data.accessToken);
 

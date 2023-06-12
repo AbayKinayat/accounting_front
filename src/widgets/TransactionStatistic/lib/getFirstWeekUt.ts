@@ -6,7 +6,7 @@ export const getFirstWeekUt = (date: Date) => {
   if (day === 0) {
     date.setDate(date.getDate() - 6);
   } else {
-    date.setDate(date.getDate() - 6 + 1);
+    date.setDate(date.getDate() - day + 1);
   }
 
   return dateToUt(date);

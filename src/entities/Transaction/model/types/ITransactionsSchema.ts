@@ -1,3 +1,4 @@
+import { DateFilterType } from "widgets/Header";
 import { ITransaction } from "./ITransaction";
 
 export interface ITransactionsSchema {
@@ -9,5 +10,12 @@ export interface ITransactionsSchema {
   error: string,
   isOpen: boolean,
   editIsOpen: boolean,
-  editId: number | undefined
+  editId: number | undefined,
+  getTransactionsWhenCreate: boolean,
+  createdCount: number,
+  startUt: number,
+  endUt: number,
+  sortField: string,
+  sortOrder: number,
+  dateType: DateFilterType
 }

@@ -13,7 +13,7 @@ export const editTransaction = createAsyncThunk<
       const transactions = getState().transactions;
       const response = await extra.api.put<ITransaction>(`/transactions/${transactions.editId}`, data);
 
-      dispatch(fetchTransactions({ sortField: "date", sortOrder: 1 }));
+      dispatch(fetchTransactions());
 
       return response.data;
     } catch(e: any) {

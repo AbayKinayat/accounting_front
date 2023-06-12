@@ -5,6 +5,7 @@ import { authByUsername } from "../services/authByUsername";
 import { registerByUsername } from "../services/regiterByUsername";
 import { refreshUser } from "../services/refreshUser";
 import { logout } from "../services/logout";
+import { fetchCurrentUser } from "../services/fetchCurrentUser";
 
 const initialState: IUserSchema = {
   user: null,
@@ -18,6 +19,9 @@ const userSlice = createSlice({
   reducers: {
     setUser(state, action: PayloadAction<IUser | null>) {
       state.user = action.payload;
+    },
+    setUserCash(state, action: PayloadAction<string>) {
+      if (state.user) state.user.cash = action.payload;
     }
   },
   extraReducers: builder => builder
@@ -33,7 +37,7 @@ const userSlice = createSlice({
       (state, action: PayloadAction<IUser>) => {
         state.user = action.payload;
         state.loading = false;
-        state.error = ""; 
+        state.error = "";
       }
     )
     .addCase(
@@ -54,7 +58,7 @@ const userSlice = createSlice({
       (state, action: PayloadAction<IUser>) => {
         state.user = action.payload;
         state.loading = false;
-        state.error = ""; 
+        state.error = "";
       }
     )
     .addCase(
@@ -103,6 +107,19 @@ const userSlice = createSlice({
       (state, action) => {
         state.error = action.payload || "";
         state.loading = false;
+      }
+    )
+    .addCase(
+      fetchCurrentUser.fulfilled,
+      (state, action: PayloadAction<IUser>) => {
+        state.user = action.payload;
+        state.error = "";
+      }
+    )
+    .addCase(
+      fetchCurrentUser.rejected,
+      (state, action) => {
+        state.error = action.payload || "";
       }
     )
 })

@@ -3,6 +3,6 @@ export interface ITableColumn {
   iconField?: string;
   name: string;
   width?: string | number,
-  dataType?: "text" | "number" | "date",
+  dataType?: "text" | "number" | "date" | "percent",
   isCustomSort?: boolean
 }

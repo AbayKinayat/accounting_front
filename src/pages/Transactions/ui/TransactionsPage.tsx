@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { Table } from "shared/ui/Table/Table";
 import { Paginator } from "shared/ui/Paginator/Paginator";
 import { useAppDispatch } from "shared/hooks/useAppDispatch/useAppDispatch";
-import { ITransaction, fetchTransactions, getTransactionsData, getTransactionsPage, getTransactionsTotal, transactionsActions } from "entities/Transaction";
+import { ITransaction, fetchTransactions, getTransactionsData, getTransactionsPage, getTransactionsSortField, getTransactionsSortOrder, getTransactionsTotal, transactionsActions } from "entities/Transaction";
 
 import { TransactionGroup } from "./TransactionGroup";
 import "./TransactionsPage.scss";
@@ -38,33 +38,25 @@ const columns: ITableColumn[] = [
 ]
 
 const TransactionsPage: FC = () => {
-  const [sortField, setSortField] = useState("date");
-  const [sortOrder, setSortOrder] = useState(1);
   const dispatch = useAppDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const transactionsData = useSelector(getTransactionsData);
   const transactionsPage = useSelector(getTransactionsPage);
   const transactionsTotal = useSelector(getTransactionsTotal);
+  const sortField = useSelector(getTransactionsSortField);
+  const sortOrder = useSelector(getTransactionsSortOrder);
 
   const getTransactions = () => {
-    dispatch(fetchTransactions({
-      sortField: "date",
-      sortOrder
-    }))
+    dispatch(fetchTransactions());
   }
 
   const sortChange = useCallback((field: string, order: number) => {
-    if (field === "date") {
-      dispatch(fetchTransactions({
-        sortField: "date",
-        sortOrder: order
-      }));
-    }
-
-    setSortField(field);
-    setSortOrder(order);
-  }, [])
+    dispatch(transactionsActions.setSortField(field));
+    dispatch(transactionsActions.setSortOrder(order));
+    if (field === "date")
+      dispatch(fetchTransactions());
+  }, [dispatch])
 
 
   const changeTransactionsPage = useCallback((page: number) => {
@@ -88,14 +80,20 @@ const TransactionsPage: FC = () => {
         Number(searchParams.get("page"))
       ));
 
-    sortChange(sortField, sortOrder);
+    getTransactions();
+
+    dispatch(transactionsActions.setGetTransactionsWhenCreate(true));
 
     return () => {
       dispatch(transactionsActions.setPage(1));
+      dispatch(transactionsActions.setGetTransactionsWhenCreate(false));
     }
-  }, [dispatch]);
+  }, []);
 
   return <div className="transactions-page">
+    <h1 className="transactions-page__title">
+      Транзации
+    </h1>
     <Table
       className="transactions-page__table"
       groupBy="date"

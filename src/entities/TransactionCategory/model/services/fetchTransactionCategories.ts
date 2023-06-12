@@ -4,13 +4,13 @@ import { ThunkConfig } from "shared/types/ThunkConfig";
 
 export const fetchTransactionCategories = createAsyncThunk<
   ITransactionCategory[],
-  void,
+  { startUt?: number, endUt?: number },
   ThunkConfig<string>
 >(
   "transactionCategory/fetchTransactionCategories",
-  async (_, { extra,  rejectWithValue  }) => {
+  async ({ startUt, endUt }, { extra,  rejectWithValue  }) => {
     try {
-      const response = await extra.api.post<ITransactionCategory[]>("/categories");
+      const response = await extra.api.post<ITransactionCategory[]>("/categories", { startUt, endUt });
       
       return response.data;
     } catch(e: any) {
