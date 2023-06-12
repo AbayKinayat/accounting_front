@@ -91,6 +91,9 @@ const TransactionsPage: FC = () => {
   }, []);
 
   return <div className="transactions-page">
+    <h1 className="transactions-page__title">
+      Транзации
+    </h1>
     <Table
       className="transactions-page__table"
       groupBy="date"

@@ -2,8 +2,6 @@ import { FC, useEffect, useState, useCallback } from "react";
 import "./Categories.scss";
 import { fetchTransactionCategories, getTransactionCategoryData } from "entities/TransactionCategory";
 import { useAppDispatch } from "shared/hooks/useAppDispatch/useAppDispatch";
-import { getFirstYearUt } from "shared/lib/getFirstYearUt/getFirstYearUt";
-import { getLastYearUt } from "shared/lib/getLastYeareUt/getLastYearUt";
 import { Table } from "shared/ui/Table/Table";
 import { ITableColumn } from "shared/types/ITable";
 import { useSelector } from "react-redux";
@@ -57,6 +55,9 @@ const Categories: FC = () => {
   }, [startUt, endUt])
 
   return <div className="categories">
+    <h1 className="categories__title">
+      Категории
+    </h1>
     <Table 
       columns={columns}
       data={categories}
