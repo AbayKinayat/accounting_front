@@ -69,4 +69,8 @@
 <ellipse cx="30.336" cy="12.097" rx="11.997" ry="12.097" style="fill:#010002"/><path d="M35.64 30.079H25.031c-7.021 0-12.714 5.739-12.714 12.821v17.771h36.037V42.9c0-7.082-5.693-12.821-12.714-12.821z" style="fill:#010002"/>
 </symbol>
 <symbol id="edit" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></symbol>
+<symbol id="calendar" viewBox="0 0 27.875 27.875">
+<path d="M25.97 2.893h-5.441V1.5a1.5 1.5 0 1 0-3 0v1.393h-7.182V1.5a1.5 1.5 0 1 0-3 0v1.393H1.904a1.5 1.5 0 0 0-1.5 1.5v21.982c0 .83.672 1.5 1.5 1.5H25.97a1.5 1.5 0 0 0 1.5-1.5V4.393a1.5 1.5 0 0 0-1.5-1.5zM3.403 24.876V9.619H24.47v15.256l-21.067.001z"/>
 </symbol>
+</symbol>
+

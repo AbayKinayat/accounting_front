@@ -2,6 +2,12 @@
 @import "./global";
 
 html, body, #root, .app {
+  display: flex;
+  flex-direction: column;
   height: 100%;
   font-family: Roboto, sans-serif;
+}
+
+.ReactModal__Overlay {
+  z-index: var(--modal-z-index);
 }

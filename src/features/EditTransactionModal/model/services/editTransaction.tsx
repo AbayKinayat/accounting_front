@@ -4,16 +4,13 @@ import { ITransaction, ITransactionCreate, fetchTransactions } from "entities/Tr
 
 export const editTransaction = createAsyncThunk<
   ITransaction,
-  ITransactionCreate,
+  ITransactionCreate & { id: number },
   ThunkConfig<string>
 >(
   "transactions/editTransaction",
-  async (data, { extra, rejectWithValue, dispatch, getState }) => {
+  async (data, { extra, rejectWithValue }) => {
     try {
-      const transactions = getState().transactions;
-      const response = await extra.api.put<ITransaction>(`/transactions/${transactions.editId}`, data);
-
-      dispatch(fetchTransactions());
+      const response = await extra.api.put<ITransaction>(`/transactions/${data.id}`, data);
 
       return response.data;
     } catch(e: any) {
