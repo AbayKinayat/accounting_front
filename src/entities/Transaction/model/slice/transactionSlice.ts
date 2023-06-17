@@ -5,7 +5,6 @@ import { fetchTransactions } from "../services/fetchTransactions";
 import { FetchTransactionsReturn } from "../types/FetchTransactionsReturn";
 import { addTransaction } from "features/AddTransactionModal/model/services/addTransaction";
 
-
 const initialState: ITransactionsSchema = {
   transactions: [],
   page: 1,
@@ -14,6 +13,7 @@ const initialState: ITransactionsSchema = {
   error: "",
   loading: false,
   isOpen: false,
+  createInitialDate: undefined,
   editIsOpen: false,
   editId: undefined,
   getTransactionsWhenCreate: false,
@@ -22,7 +22,8 @@ const initialState: ITransactionsSchema = {
   endUt: 0,
   sortField: "date",
   sortOrder: -1,
-  dateType: "year"
+  dateType: "year",
+  isPagination: true
 }
 
 const transactionSlice = createSlice({
@@ -58,6 +59,12 @@ const transactionSlice = createSlice({
     },
     setDateType(state, action: PayloadAction<DateFilterType>) {
       state.dateType = action.payload
+    },
+    setIsPagination(state, action: PayloadAction<boolean>) {
+      state.isPagination = action.payload;
+    },
+    setCreateInitialDate(state, action: PayloadAction<Date | undefined>) {
+      state.createInitialDate = action.payload;
     }
   },
   extraReducers(builder) {

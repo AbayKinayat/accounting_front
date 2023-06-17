@@ -3,6 +3,7 @@ import "./TransactionGroup.scss";
 import { ITableColumn } from "shared/types/ITable";
 import classNames from "classnames";
 import { formatNumber } from "shared/lib/formatNumber/formatNumber";
+import { Currency } from "shared/ui/Currency/Currency";
 
 interface ITransactionGroup {
   items: Record<string, any>[],
@@ -16,7 +17,7 @@ const days = ["Вс", "Пон", "Вт", "Ср", "Чт", "Пт", "Сб"];
 export const TransactionGroup = memo<ITransactionGroup>(({ columns, items, name }) => {
 
   const amountSum = useMemo(() => {
-    return formatNumber(items.reduce((acc, val) => acc + Number(val.amount), 0));
+    return items.reduce((acc, val) => acc + Number(val.amount), 0);
   }, [items])
   
   const formattedDate = useMemo(() => {
@@ -44,7 +45,12 @@ export const TransactionGroup = memo<ITransactionGroup>(({ columns, items, name 
           key={column.field}
         >
           {
-            column.field === "name" ? formattedDate : column.field === "amount" ? amountSum : ""
+            column.field === "name" ? 
+            formattedDate : 
+            column.field === "amount" ? 
+            <Currency>
+              {amountSum}
+            </Currency>  : ""
           }
         </td>
       ))

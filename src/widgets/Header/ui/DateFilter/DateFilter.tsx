@@ -1,4 +1,4 @@
-import { memo, useCallback, useMemo, useState } from "react";
+import { memo, useCallback, useMemo, useState, useEffect } from "react";
 import { Button } from "shared/ui/Button/Button";
 import "./DateFilter.scss";
 import { dateFormatter } from "shared/lib/dateFormatter/dateFormatter";
@@ -156,6 +156,9 @@ export const DateFilter = memo(() => {
     }
   }, []);
 
+  useEffect(() => {
+    selectDateType("year")
+  }, [])
 
   return <div className="date-filter">
     <Button mod="tab" onClick={prevClickHandler}>

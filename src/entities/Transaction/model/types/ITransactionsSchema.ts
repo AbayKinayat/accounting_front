@@ -9,6 +9,7 @@ export interface ITransactionsSchema {
   loading: boolean,
   error: string,
   isOpen: boolean,
+  createInitialDate: Date | undefined,
   editIsOpen: boolean,
   editId: number | undefined,
   getTransactionsWhenCreate: boolean,
@@ -17,5 +18,6 @@ export interface ITransactionsSchema {
   endUt: number,
   sortField: string,
   sortOrder: number,
-  dateType: DateFilterType
+  dateType: DateFilterType,
+  isPagination: boolean
 }

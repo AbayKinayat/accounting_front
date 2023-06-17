@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { Input } from "shared/ui/Input/Input";
 import { $api } from "shared/api/api";
 import { useSnackbar } from "notistack";
+import { Currency } from "shared/ui/Currency/Currency";
 
 
 
@@ -86,7 +87,9 @@ const Account: FC = () => {
                   disabled={updateLoading}
                 />
                 :
-                user.cash
+                <Currency>
+                  {Number(user.cash)}
+                </Currency> 
             }
           </dd>
         </div>

@@ -4,15 +4,22 @@ import { FetchTransactionsReturn } from "../types/FetchTransactionsReturn";
 
 export const fetchTransactions = createAsyncThunk<
   FetchTransactionsReturn,
-  void | { startUt: number, endUt: number },
+  void,
   ThunkConfig<string>
 >(
   "transactions/fetchTransactions",
-  async (body, { extra, rejectWithValue, getState }) => {
+  async (_, { extra, rejectWithValue, getState }) => {
     try {
-      const { page, limit, sortField, sortOrder } = getState().transactions;
+      const { page, limit, sortField, sortOrder, startUt, endUt, isPagination } = getState().transactions;
 
-      const actualBody = body || { page, limit, sortField, sortOrder }
+      const actualBody = {  
+        sortField, 
+        sortOrder, 
+        startUt, 
+        endUt,
+      }
+
+      if (isPagination) Object.assign(actualBody, { page, limit });
 
       const response = await extra.api.post<FetchTransactionsReturn>("/transactions", actualBody);
 

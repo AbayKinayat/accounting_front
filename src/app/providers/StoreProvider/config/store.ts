@@ -20,7 +20,8 @@ export const store = configureStore({
         extraArgument: {
           api: $api
         }
-      }
+      },
+      serializableCheck: false
     })
   },
 })

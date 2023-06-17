@@ -1,9 +1,9 @@
-import { memo, useCallback, useState } from "react";
+import { memo, useCallback, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import Modal from "react-modal";
 import { useSnackbar } from "notistack";
-import { ITransactionCreate, ITransactionCreateForm, getTransactionsIsOpen, transactionsActions } from "entities/Transaction";
+import { ITransactionCreate, ITransactionCreateForm, getTransactionsCreateInitialDate, getTransactionsIsOpen, transactionsActions } from "entities/Transaction";
 import { addTransaction } from "../../model/services/addTransaction";
 import { TransactionCategorySelect } from "entities/TransactionCategory";
 import { useAppDispatch } from "shared/hooks/useAppDispatch/useAppDispatch";
@@ -29,6 +29,7 @@ const requiredRule = { required: true }
 export const AddTransactionModal = memo(() => {
   const dispatch = useAppDispatch();
   const isOpen = useSelector(getTransactionsIsOpen);
+  const createInitialDate = useSelector(getTransactionsCreateInitialDate);
   const [loading, setLoading] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
 
@@ -94,6 +95,16 @@ export const AddTransactionModal = memo(() => {
   }, [])
 
   const typeId = watch('typeId');
+
+  useEffect(() => {
+    setValue("date", createInitialDate)
+  }, [createInitialDate])
+
+  useEffect(() => {
+    return () => {
+      dispatch(transactionsActions.setCreateInitialDate(undefined))
+    }
+  }, [])
 
   return <div className="add">
 
