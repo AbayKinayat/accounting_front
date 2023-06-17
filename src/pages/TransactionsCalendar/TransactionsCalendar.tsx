@@ -1,24 +1,52 @@
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useState, useEffect, useRef, useMemo } from "react";
+import { useSelector } from 'react-redux';
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
-import interactionPlugin from "@fullcalendar/interaction"
-import "./TransactionsCalendar.scss";
-import type { EventInput, DatesSetArg, EventChangeArg, EventClickArg } from "@fullcalendar/core"
-import { useSelector } from 'react-redux';
-import { ITransaction, fetchTransactions, getTransactionsData, getTransactionsLoading, transactionsActions } from 'entities/Transaction';
-import { useAppDispatch } from "shared/hooks/useAppDispatch/useAppDispatch";
+import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction"
+import type { EventInput, DatesSetArg, EventChangeArg, EventClickArg, EventContentArg, DayCellContentArg } from "@fullcalendar/core"
+import { ITransaction, fetchTransactions, getTransactionsData, transactionsActions } from 'entities/Transaction';
 import ruLocale from '@fullcalendar/core/locales/ru';
-import { editTransaction } from "features/EditTransactionModal/model/services/editTransaction";
+import { useAppDispatch } from "shared/hooks/useAppDispatch/useAppDispatch";
+import { editTransaction } from "features/EditTransactionModal";
+
+import "./TransactionsCalendar.scss";
+import { formatNumber } from "shared/lib/formatNumber/formatNumber";
+import { Currency } from "shared/ui/Currency/Currency";
 
 const plugins = [dayGridPlugin, interactionPlugin];
+
+function EventContent({ event, backgroundColor }: EventContentArg) {
+  return <div className="transactions-calendar__event">
+    <div className="transactions-calendar__event-circle" style={{ background: backgroundColor}}>
+    </div>
+    <div className="transactions-calendar__event-title">
+      {event.title}
+    </div>
+    <Currency className="transactions-calendar__event-amount">
+      { Number(event.extendedProps.amount) }
+    </Currency>
+  </div>
+}
 
 const TransactionsCalendar = () => {
   const [start, setStart] = useState<Date | undefined>()
   const [end, setEnd] = useState<Date | undefined>()
+  const calendarRef = useRef<any>(null);
   const dispatch = useAppDispatch();
 
   const transactions = useSelector(getTransactionsData);
-  const transactionsLosading = useSelector(getTransactionsLoading);
+
+  const eventsAmounts = useMemo(() => {
+    const map: Record<string, number> = {};
+
+    transactions.forEach(transaction => {
+      const date = new Date(transaction.date * 1000);
+      if (!map[date.toISOString()]) map[date.toISOString()] = 0;
+      map[date.toISOString()] += Number(transaction.amount); 
+    })
+
+    return map;
+  }, [transactions]);
 
   const eventDataTransform = useCallback((transaction: ITransaction): EventInput => {
     const transactionDate = new Date(transaction.date * 1000);
@@ -41,7 +69,9 @@ const TransactionsCalendar = () => {
       const startUt = Math.trunc(start.getTime() / 1000);
       const endUt = Math.trunc(end.getTime() / 1000);
 
-      dispatch(fetchTransactions({ startUt, endUt }))
+      dispatch(transactionsActions.setStartUt(startUt));
+      dispatch(transactionsActions.setEndUt(endUt));
+      dispatch(fetchTransactions())
     }
   }
 
@@ -67,7 +97,32 @@ const TransactionsCalendar = () => {
     dispatch(transactionsActions.setEditIsOpen(true));
   }, [])
 
-  useEffect(fetchCalendarTransactions, [start, end])
+  const dateClickHandler = useCallback(({ date }: DateClickArg) => {
+    dispatch(transactionsActions.setCreateInitialDate(date));
+    dispatch(transactionsActions.setIsOpen(true));
+  }, [])
+
+  const dayCellContent = useCallback(({ dayNumberText, date }: DayCellContentArg) => {
+      const amount = eventsAmounts[date.toISOString()];
+      return <div className="transactions-calendar__date-cell">
+        <Currency>
+          {amount}
+        </Currency>
+        <div className="transactions-calendar__date-text">{dayNumberText}</div> 
+      </div>
+  }, [eventsAmounts])
+
+  useEffect(() => {
+    dispatch(transactionsActions.setIsPagination(false));
+    fetchCalendarTransactions();
+  }, [start, end])
+
+  useEffect(() => {
+    dispatch(transactionsActions.setGetTransactionsWhenCreate(true));
+    return () => {
+      dispatch(transactionsActions.setGetTransactionsWhenCreate(false));
+    }
+  }, [])
 
   return <div className="transactions-calendar">
     <FullCalendar
@@ -80,8 +135,13 @@ const TransactionsCalendar = () => {
       editable
       selectable
       droppable
+      ref={calendarRef}
       eventChange={eventChangeHandler}
       eventClick={eventClickHandler}
+      dateClick={dateClickHandler}
+      dayMaxEventRows={4}
+      eventContent={EventContent}
+      dayCellContent={dayCellContent}
     />
   </div>
 }

@@ -3,10 +3,10 @@ import classNames from "classnames";
 import { generateUid } from "shared/lib/generatedUid/genearateUid";
 import { Icon } from "shared/ui/Icon/Icon";
 import SelectBase, { components, type OptionProps, type GroupBase, type CSSObjectWithLabel } from "react-select";
-import "./Select.scss";
 import { type Control, Controller } from "react-hook-form";
 import { FormRenderComponent } from "shared/types/FormRenderComponent";
 import { Rules } from "shared/types/Rules";
+import "./Select.scss";
 
 interface SelectProps {
   label?: string,
@@ -60,6 +60,8 @@ const getValueContainerStyle = () => ({
   padding: "0 8px",
 })
 
+const getMenuPortalClassName = () => "select__menu-portal"
+
 export const Select = memo<SelectProps>(({
   options,
   className,
@@ -95,6 +97,9 @@ export const Select = memo<SelectProps>(({
       getOptionLabel={getOptionLabel}
       getOptionValue={getOptionValue}
       isClearable
+      classNames={{
+        menuPortal: getMenuPortalClassName
+      }}
       styles={{
         option: getSelectOptionStyle,
         control: getControlStyle,

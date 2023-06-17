@@ -16,5 +16,6 @@ export { getTransactionsEndUt } from "./model/selectors/getTransactionsEndUt";
 export { getTransactionsSortField } from "./model/selectors/getTransactionsSortField";
 export { getTransactionsSortOrder } from "./model/selectors/getTransactionsSortOrder";
 export { getTransactionsDateType } from "./model/selectors/getTransactionsDateType";
+export { getTransactionsCreateInitialDate } from "./model/selectors/getTransactionsCreateInitialDate";
 export { ITransactionCreateForm } from "./model/types/TransactionCreateForm"; 
 export { ITransactionCreate } from "./model/types/ITransactionCreate";

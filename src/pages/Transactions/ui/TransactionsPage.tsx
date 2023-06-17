@@ -1,9 +1,9 @@
-import { FC, useCallback, useEffect, useState } from "react";
+import { FC, useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Table } from "shared/ui/Table/Table";
 import { Paginator } from "shared/ui/Paginator/Paginator";
 import { useAppDispatch } from "shared/hooks/useAppDispatch/useAppDispatch";
-import { ITransaction, fetchTransactions, getTransactionsData, getTransactionsPage, getTransactionsSortField, getTransactionsSortOrder, getTransactionsTotal, transactionsActions } from "entities/Transaction";
+import { ITransaction, fetchTransactions, getTransactionsData, getTransactionsEndUt, getTransactionsPage, getTransactionsSortField, getTransactionsSortOrder, getTransactionsStartUt, getTransactionsTotal, transactionsActions } from "entities/Transaction";
 
 import { TransactionGroup } from "./TransactionGroup";
 import "./TransactionsPage.scss";
@@ -46,6 +46,8 @@ const TransactionsPage: FC = () => {
   const transactionsTotal = useSelector(getTransactionsTotal);
   const sortField = useSelector(getTransactionsSortField);
   const sortOrder = useSelector(getTransactionsSortOrder);
+  const startUt = useSelector(getTransactionsStartUt);
+  const endUt = useSelector(getTransactionsEndUt);
 
   const getTransactions = () => {
     dispatch(fetchTransactions());
@@ -57,7 +59,6 @@ const TransactionsPage: FC = () => {
     if (field === "date")
       dispatch(fetchTransactions());
   }, [dispatch])
-
 
   const changeTransactionsPage = useCallback((page: number) => {
     dispatch(transactionsActions.setPage(page));
@@ -80,6 +81,8 @@ const TransactionsPage: FC = () => {
         Number(searchParams.get("page"))
       ));
 
+    dispatch(transactionsActions.setIsPagination(true));
+
     getTransactions();
 
     dispatch(transactionsActions.setGetTransactionsWhenCreate(true));
@@ -92,7 +95,7 @@ const TransactionsPage: FC = () => {
 
   return <div className="transactions-page">
     <h1 className="transactions-page__title">
-      Транзации
+      Транзакции
     </h1>
     <Table
       className="transactions-page__table"
