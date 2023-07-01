@@ -48,10 +48,7 @@ const Categories: FC = () => {
   }, [])
 
   useEffect(() => {
-    dispatch(fetchTransactionCategories({
-      startUt: startUt,
-      endUt: endUt
-    }))
+    dispatch(fetchTransactionCategories())
   }, [startUt, endUt])
 
   return <div className="categories">

@@ -6,12 +6,17 @@
   width: 100%;
 
   &__bar {
-    background-color: tomato;
     width: 100%;
+    background: var(--gray-dark);
 
     &-value {
+      max-width: 100%;
       background: var(--brand-dark);
       height: 10px;
+
+      &_error {
+        background: tomato;
+      }
     }
   }
 

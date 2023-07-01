@@ -83,6 +83,16 @@ export const Header = memo<HeaderProps>(({ className }) => {
       </Button>
     </NavLink>
 
+    <NavLink className="header-menu-item" to="/budget">
+      <Button 
+        className="header__button"
+        icon="budget"
+        mod="icon"
+      >
+        Бюджет
+      </Button>
+    </NavLink>
+
     <Button
       className="header__button header-menu-item"
       mod="icon"

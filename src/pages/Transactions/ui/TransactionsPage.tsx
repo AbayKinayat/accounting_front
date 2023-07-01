@@ -9,6 +9,7 @@ import { TransactionGroup } from "./TransactionGroup";
 import "./TransactionsPage.scss";
 import { useSearchParams } from "react-router-dom";
 import { ITableColumn } from "shared/types/ITable";
+import { fetchTransactionCategories } from "entities/TransactionCategory";
 
 const columns: ITableColumn[] = [
   {
@@ -92,6 +93,10 @@ const TransactionsPage: FC = () => {
       dispatch(transactionsActions.setGetTransactionsWhenCreate(false));
     }
   }, []);
+
+  useEffect(() => {
+    dispatch(fetchTransactionCategories());
+  }, [])
 
   return <div className="transactions-page">
     <h1 className="transactions-page__title">

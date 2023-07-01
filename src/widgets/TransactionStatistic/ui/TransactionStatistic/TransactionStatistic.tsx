@@ -3,7 +3,7 @@ import { ResponsiveContainer, LineChart, CartesianGrid, XAxis, YAxis, Tooltip, L
 import { getTransactionsStatistic } from "../../lib/getTransactionsStatistic";
 import { ITransactionStatistic } from "../../types/ITransactionStatistic";
 import { useSelector } from "react-redux";
-import { getTransactionCategoryData } from "entities/TransactionCategory";
+import { fetchTransactionCategories, getTransactionCategoryData } from "entities/TransactionCategory";
 import "./TransactionStatistic.scss";
 import { CustomTooltip } from "../CustomTooltip/CustomTooltip";
 import { Select } from "shared/ui/Select/Select";
@@ -103,6 +103,10 @@ export const TransactionStatistic = memo(() => {
     })
     setCategoriesStates(categoryStatesMap);
   }, [categories]);
+
+  useEffect(() => {
+    dispatch(fetchTransactionCategories());
+  }, [])
 
   const setStartUt = useCallback((ut: number) => {
     dispatch(transactionsActions.setStartUt(ut))
