@@ -116,15 +116,11 @@ export const Table = memo(forwardRef<HTMLTableElement, TableProps>(({
       }
     })
 
-    console.log("groupsMap", groupsMap)
-
     sortedData.forEach(item => {
       const groupName = tableService.formatGroup(item[groupBy], groupType);
       const group = groupsMap[groupName];
       if (group) group.items.push(item);
     })
-
-    console.log("groups", groups)
 
     return groups;
   }, [groupBy, sortedData, data]);
@@ -171,12 +167,11 @@ export const Table = memo(forwardRef<HTMLTableElement, TableProps>(({
               {
                 GroupComponent ?
                   <GroupComponent
-                    key={group.name}
                     name={group.name}
                     items={group.items}
                     columns={columns}
                   /> :
-                  <tr key={group.name} className="table__row">
+                  <tr className="table__row">
                     <td className="table__property table__group" colSpan={columns.length}>
                       {group.name}
                     </td>

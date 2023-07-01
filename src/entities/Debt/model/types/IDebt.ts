@@ -11,5 +11,6 @@ export interface IDebt {
   sum: number,
   statusId: number,
   createdAt: string,
-  updatedAt: string
+  updatedAt: string,
+  progress: [number, number]
 }

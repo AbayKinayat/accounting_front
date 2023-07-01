@@ -13,6 +13,10 @@ export const fetchDebts = createAsyncThunk<
     try {
       const response = await extra.api.post<IDebt[]>("/debt");
 
+      response.data.map(debt => {
+        debt.progress = [debt.amountPaid, debt.sum];
+      })
+
       return response.data;
     } catch(e: any) {
       return rejectWithValue(e?.response?.data?.message || "Произошло ошибка при получении долгов, попробуйте перезагузить страницу");

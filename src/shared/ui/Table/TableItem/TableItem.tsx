@@ -3,6 +3,7 @@ import { ITableColumn } from "shared/types/ITable";
 import classNames from "classnames";
 import { TableService } from "../TableService";
 import { Icon } from "shared/ui/Icon/Icon";
+import ProgressBar from "shared/ui/ProgressBar/ProgressBar";
 
 interface TableItemProps {
   item: Record<string, any>,
@@ -17,12 +18,12 @@ export const TableItem = memo<TableItemProps>(({ item, columns, onSelect, onCont
 
   const clickHandler = useCallback(() => {
     onSelect?.(item)
-  }, [])
+  }, [item])
 
   const contextMenuHandler = useCallback((event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation()
     onContextMenu(event, item);
-  }, [])
+  }, [item])
 
   return <tr
     className="table__row"
@@ -47,10 +48,14 @@ export const TableItem = memo<TableItemProps>(({ item, columns, onSelect, onCont
                 name={tableService.getField(item, column.iconField)}
               />
             }
-            {tableService.formatText(
-              tableService.getField(item, column.field),
-              column.dataType
-            )}
+            {
+              column.dataType === "progress" ?
+                <ProgressBar value={Number(item[column.field][0])} maxValue={Number(item[column.field][1])} /> :
+                tableService.formatText(
+                  tableService.getField(item, column.field),
+                  column.dataType
+                )
+            }
           </div>
         </td>
       )
