@@ -7,20 +7,27 @@ import { Icon } from "shared/ui/Icon/Icon";
 interface TableItemProps {
   item: Record<string, any>,
   columns: ITableColumn[],
-  onSelect?: (item: Record<string, any>) => void
+  onSelect?: (item: Record<string, any>) => void,
+  onContextMenu: (event: React.MouseEvent<HTMLElement>, item?: Record<string, any>) => void
 }
 
 const tableService = new TableService();
 
-export const TableItem = memo<TableItemProps>(({ item, columns, onSelect }) => {
+export const TableItem = memo<TableItemProps>(({ item, columns, onSelect, onContextMenu }) => {
 
   const clickHandler = useCallback(() => {
     onSelect?.(item)
   }, [])
 
+  const contextMenuHandler = useCallback((event: React.MouseEvent<HTMLElement>) => {
+    event.stopPropagation()
+    onContextMenu(event, item);
+  }, [])
+
   return <tr
     className="table__row"
     onClick={clickHandler}
+    onContextMenu={contextMenuHandler}
   >
     {
       columns.map(column =>
@@ -48,5 +55,6 @@ export const TableItem = memo<TableItemProps>(({ item, columns, onSelect }) => {
         </td>
       )
     }
+    <td className="table__property"></td>
   </tr>
 })

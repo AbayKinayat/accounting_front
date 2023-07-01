@@ -5,6 +5,7 @@ import { Statistics } from 'pages/Statistics';
 import { Categories } from 'pages/Categories';
 import { Account } from 'pages/Account';
 import TransactionsCalendar from 'pages/TransactionsCalendar/TransactionsCalendar';
+import { Debt } from 'pages/Debt';
 
 export const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ export const router = createBrowserRouter([
       {
         path: "calendar",
         element: <TransactionsCalendar />
+      },
+      {
+        path: "debt",
+        element: <Debt />
       }
     ]
   }

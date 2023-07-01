@@ -1,0 +1,16 @@
+.add-debt {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__debtor-change {
+    display: flex;
+  }
+}

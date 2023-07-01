@@ -1,8 +1,16 @@
 .context-menu {
+  display: flex;
+  flex-direction: column;
   min-width: 200px;
   padding: 10px;
   border-radius: 5px;
   background: #fff;
   border: var(--brand-dark);
   z-index: var(--context-menu-z-index);
+  display: none;
+  box-shadow: 0 0 60px -10px rgba(0, 0, 0, 0.5);
+  
+  &:not(.context-menu_active) {
+    display: none;
+  }
 }

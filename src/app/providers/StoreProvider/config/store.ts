@@ -4,11 +4,13 @@ import { userReducer } from "entities/User";
 import { transactionsReducer } from "entities/Transaction";
 import { StateSchema } from "./StateSchema";
 import { transactionCategoryReducer } from "entities/TransactionCategory";
+import { debtsReducer } from "entities/Debt";
 
 const reducers = combineReducers<StateSchema>({
   user: userReducer,
   transactions: transactionsReducer,
-  transactionCategory: transactionCategoryReducer
+  transactionCategory: transactionCategoryReducer,
+  debts: debtsReducer
 })
 
 export const store = configureStore({
