@@ -1,4 +1,4 @@
-import { FC, Fragment, memo, useCallback, useMemo, useState } from "react";
+import { FC, Fragment, memo, useCallback, useMemo, useState, forwardRef, useRef } from "react";
 import { TableColumn } from "./TableColumn/TableColumn";
 import { TableItem } from "./TableItem/TableItem";
 import { ITableColumn } from "../../types/ITable";
@@ -7,6 +7,10 @@ import { TableService } from "./TableService";
 import "./Table.scss";
 import classNames from "classnames";
 import { checkTypesAndSort } from "shared/lib/checkTypesAndSort/checkTypesAndSort";
+import { ContextMenuItem } from "../ContextMenuItem/ContextMenuItem";
+import { IContextMenuRef } from "shared/types/IContextMenuRef";
+import { ContextMenu } from "../ContextMenu/ContextMenu";
+import { ITableContextMenuItem } from "shared/types/ITableContextMenuItem";
 
 const tableService = new TableService();
 
@@ -26,8 +30,11 @@ interface TableProps {
   keyName: string,
   groupBy?: string,
   groupType?: "date",
+  title?: string,
+  menuItems?: ITableContextMenuItem[],
   onSort?: (field: string, order: number) => void,
-  onSelect?: (item: any) => void
+  onSelect?: (item: any) => void,
+  onContextMenu?: (event: React.MouseEvent<HTMLElement>, item?: Record<string, any>) => void
 }
 
 interface ITableGroup {
@@ -35,7 +42,7 @@ interface ITableGroup {
   items: Record<string, any>[],
 }
 
-export const Table = memo<TableProps>(({
+export const Table = memo(forwardRef<HTMLTableElement, TableProps>(({
   columns,
   data,
   keyName,
@@ -45,11 +52,15 @@ export const Table = memo<TableProps>(({
   groupBy,
   GroupComponent,
   className,
+  title,
+  menuItems,
   onSort,
-  onSelect
-}) => {
+  onSelect,
+  onContextMenu,
+}, ref) => {
   const [lastSortField, setLastSortField] = useState(sortField);
   const [lastSortOrder, setLastSortOrder] = useState(sortOrder);
+  const contextMenuRef = useRef<null | IContextMenuRef>(null);
 
   const sortHandler = useCallback((sort: ISort) => {
     const isCustomSort = Boolean(columns.find(column => column.field === sort.field)?.isCustomSort);
@@ -89,13 +100,13 @@ export const Table = memo<TableProps>(({
 
     if (sortField) {
       const column = columns.find(column => column.field === sortField);
-      column?.isCustomSort
+      // column?.isCustomSort
     }
 
     data.forEach(item => {
       const groupName = tableService.formatGroup(item[groupBy], groupType);
 
-      if (groupName && !groupsMap[groupName]) {
+      if (groupName !== undefined && !groupsMap[groupName]) {
         const group = {
           name: groupName,
           items: []
@@ -105,71 +116,108 @@ export const Table = memo<TableProps>(({
       }
     })
 
+    console.log("groupsMap", groupsMap)
+
     sortedData.forEach(item => {
       const groupName = tableService.formatGroup(item[groupBy], groupType);
       const group = groupsMap[groupName];
       if (group) group.items.push(item);
     })
 
+    console.log("groups", groups)
+
     return groups;
   }, [groupBy, sortedData, data]);
 
-  return <table className={classNames("table", className)}>
-    <thead className="table__head">
-      <tr className="table__row">
+  const contextItem = useMemo(() => {
+    return menuItems?.map(item => (
+      <ContextMenuItem
+        key={item.key}
+        onClick={item.command}
+      >
+        {item.label}
+      </ContextMenuItem>
+    ))
+  }, [menuItems])
+
+  const openContextMenu = useCallback((event: React.MouseEvent<HTMLElement>, item?: Record<string, any>) => {
+    event.preventDefault()
+    contextMenuRef.current?.open(event);
+    onContextMenu?.(event, item);
+  }, [onContextMenu])
+
+  return <>
+    <table title={title} ref={ref} className={classNames("table", className)} onContextMenu={openContextMenu}>
+      <thead className="table__head">
+        <tr className="table__row">
+          {
+            columns.map(column =>
+              <TableColumn
+                key={column.field}
+                column={column}
+                sortField={sortField}
+                sortOrder={sortOrder}
+                onSort={sortHandler}
+              />
+            )
+          }
+          <td className="table__property"></td>
+        </tr>
+      </thead>
+      <tbody className="table__body">
         {
-          columns.map(column =>
-            <TableColumn
-              key={column.field}
-              column={column}
-              sortField={sortField}
-              sortOrder={sortOrder}
-              onSort={sortHandler}
-            />
-          )
+          groupBy ?
+            groups.map((group) => (<Fragment key={group.name}>
+              {
+                GroupComponent ?
+                  <GroupComponent
+                    key={group.name}
+                    name={group.name}
+                    items={group.items}
+                    columns={columns}
+                  /> :
+                  <tr key={group.name} className="table__row">
+                    <td className="table__property table__group" colSpan={columns.length}>
+                      {group.name}
+                    </td>
+                  </tr>
+              }
+              {
+                group.items.map(item => (
+                  <TableItem
+                    key={item[keyName]}
+                    item={item}
+                    columns={columns}
+                    onSelect={onSelect}
+                    onContextMenu={openContextMenu}
+                  />
+                ))
+              }
+            </Fragment>)
+            )
+            :
+            sortedData.map(item => (
+              <TableItem
+                key={item[keyName]}
+                item={item}
+                columns={columns}
+                onSelect={onSelect}
+                onContextMenu={openContextMenu}
+              />
+            ))
         }
-      </tr>
-    </thead>
-    <tbody className="table__body">
-      {
-        groupBy ?
-          groups.map((group) => (<Fragment key={group.name}>
-            {
-              GroupComponent ?
-                <GroupComponent
-                  key={group.name}
-                  name={group.name}
-                  items={group.items}
-                  columns={columns}
-                /> :
-                <tr key={group.name} className="table__row">
-                  <td className="table__property table__group" colSpan={columns.length}>
-                    {group.name}
-                  </td>
-                </tr>
-            }
-            {
-              group.items.map(item => (
-                <TableItem
-                  key={item[keyName]}
-                  item={item}
-                  columns={columns}
-                  onSelect={onSelect}
-                />
-              ))
-            }
-          </Fragment>)
-          )
-          :
-          sortedData.map(item => (
-            <TableItem
-              key={item[keyName]}
-              item={item}
-              columns={columns}
-              onSelect={onSelect}
-            />
-          ))
-      }
-    </tbody>
-  </table>
-})
+        <tr className="table__row table__row_empty">
+          <td className="table__property" colSpan={columns.length + 1}></td>
+        </tr>
+      </tbody>
+    </table>
+    {
+      menuItems &&
+      <ContextMenu className="table__context-menu" ref={contextMenuRef}>
+        {
+          contextItem
+        }
+      </ContextMenu>
+    }
+  </>
+})) 

@@ -1,0 +1,22 @@
+.debt {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  height: 100%;
+
+  &__title {
+    font-size: 30px;
+    margin: 0;
+    margin-bottom: 20px;
+  }
+
+  &__table {
+    flex: 1 0 auto;
+    height: auto;
+  }
+
+  & &__context-menu {
+    display: flex !important;   
+    flex-direction: column;
+  }
+}

@@ -1,4 +1,4 @@
-import { memo, useCallback, useMemo, useState, useEffect } from "react";
+import { memo, useCallback, useMemo, useState, useEffect, useRef } from "react";
 import { Button } from "shared/ui/Button/Button";
 import "./DateFilter.scss";
 import { dateFormatter } from "shared/lib/dateFormatter/dateFormatter";
@@ -15,6 +15,7 @@ import { getFirstWeekUt } from "widgets/TransactionStatistic/lib/getFirstWeekUt"
 import { getLastWeekUt } from "widgets/TransactionStatistic/lib/getLastWeekUt";
 import { Datepicker } from "shared/ui/Datepicker/Datepicker";
 import { useForm } from "react-hook-form";
+import { IContextMenuRef } from "shared/types/IContextMenuRef";
 
 const months = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июль", "Июнь", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
 
@@ -23,8 +24,8 @@ export const DateFilter = memo(() => {
   const endUt = useSelector(getTransactionsEndUt);
   const dateType = useSelector(getTransactionsDateType);
   const dispatch = useAppDispatch();
-  const [contextMenuRef, setContextMenuRef] = useState<HTMLButtonElement | null>(null);
-  const [contextMenuIsOpen, setContextMenuIsOpen] = useState(false);
+  const [referenceElement, setReferenseElement] = useState<HTMLButtonElement | null>(null);
+  const contextMenuRef = useRef<null | IContextMenuRef>(null);
 
   const { control, setValue } = useForm<{ startDate: Date, endDate: Date }>();
 
@@ -113,12 +114,8 @@ export const DateFilter = memo(() => {
     }
   }, [startUt, endUt, dateType])
 
-  const contextMenuClose = useCallback(() => {
-    setContextMenuIsOpen(false);
-  }, []);
-
-  const contextMenuOpen = useCallback(() => {
-    setContextMenuIsOpen(true);
+  const contextMenuOpen = useCallback((event: React.MouseEvent<HTMLElement>) => {
+    contextMenuRef.current?.open(event);
   }, [])
 
   const selectDateType = (dateType: DateFilterType) => {
@@ -166,7 +163,7 @@ export const DateFilter = memo(() => {
     </Button>
     <Button
       mod="tab"
-      ref={setContextMenuRef}
+      ref={setReferenseElement}
       onClick={contextMenuOpen}
     >
       {text}
@@ -175,9 +172,7 @@ export const DateFilter = memo(() => {
       След
     </Button>
     <ContextMenu
-      referenceElement={contextMenuRef}
-      isOpen={contextMenuIsOpen}
-      onClose={contextMenuClose}
+      ref={contextMenuRef}
     >
       <ContextMenuItem onClick={selectDateType.bind(null, "year")}>
         Год

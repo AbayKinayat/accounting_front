@@ -20,18 +20,26 @@
       filter: brightness(1.1);
       background: var(--brand-light);
     }
+
+    &:last-child {
+      filter: none;
+      background: none;
+      cursor: auto;
+    }
   }
 
   &__property {
     padding: 7px;
     border: 1px solid var(--gray-dark);
+
+    &:last-child {
+      padding: 0;
+    }
   }
 
   &__property_number &__container, &__property_percent &__container {
     justify-content: flex-end;
   }
-
-   
 
   &__group {
     background: var(--gray-light);
@@ -48,6 +56,15 @@
     &:hover {
       background: var(--brand-light);
       filter: brightness(1.1);
+    }
+
+    &_empty {
+      height: 100%;
+
+      &:hover {
+        background: none;
+        filter: none;
+      }
     }
   }
 }

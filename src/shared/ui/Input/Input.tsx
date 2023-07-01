@@ -1,4 +1,4 @@
-import {  memo, useRef, useMemo, useCallback, type ChangeEvent, useState, FocusEvent } from "react";
+import { memo, useRef, useMemo, useCallback, type ChangeEvent, useState, FocusEvent } from "react";
 import { generateUid } from "shared/lib/generatedUid/genearateUid";
 import classNames from "classnames";
 import { formatNumber } from "shared/lib/formatNumber/formatNumber";
@@ -8,7 +8,7 @@ import type { FormRenderComponent } from "shared/types/FormRenderComponent";
 import type { FormRenderField } from "shared/types/FormRenderField";
 import "./Input.scss";
 
-type InputType = "string" | "password" | "currency"
+type InputType = "string" | "password" | "currency" | "text"
 
 interface InputProps {
   label?: string,
@@ -17,18 +17,19 @@ interface InputProps {
   type?: InputType,
   className?: string,
   disabled?: boolean,
-  onBlur?: (event: FocusEvent<HTMLInputElement>) => {},
+  onBlur?: (event: FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {},
   control: Control<any>,
   rules?: Rules
 }
 
-export const Input = memo<InputProps>(
+const inputComponentTypes = ["string", "password", "currency"];
 
+export const Input = memo<InputProps>(
   ({
     label,
     id,
     name,
-    type,
+    type = "string",
     className,
     onBlur,
     disabled,
@@ -45,7 +46,6 @@ export const Input = memo<InputProps>(
         if (actualValue.includes(",")) actualValue = actualValue.split(",").join("")
 
         const num = Number(actualValue);
-        console.log(num)
         if (Number.isNaN(num))
           return 0;
         else
@@ -54,7 +54,7 @@ export const Input = memo<InputProps>(
       return actualValue;
     }, [inputValue]);
 
-    const changeHandler = (event: ChangeEvent<HTMLInputElement>, field: FormRenderField) => {
+    const changeHandler = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, field: FormRenderField) => {
       let value = event.target.value;
       if (type === "currency") {
         if (value.includes(",")) value = value.split(",").join("")
@@ -66,13 +66,12 @@ export const Input = memo<InputProps>(
           setInputValue(stringedNum);
         }
       } else {
-        console.log("CHANGE")
         field.onChange(value);
         setInputValue(value);
       }
     }
 
-    const blurHandler = useCallback((event: FocusEvent<HTMLInputElement>, field: FormRenderField) => {
+    const blurHandler = useCallback((event: FocusEvent<HTMLInputElement | HTMLTextAreaElement>, field: FormRenderField) => {
       onBlur?.(event);
       field.onBlur();
     }, [])
@@ -84,17 +83,34 @@ export const Input = memo<InputProps>(
         htmlType = "password"
 
       if (field.value !== formattedValue) setInputValue(field.value)
-        
-      return <input
+
+      function componentChangeHandler(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+        changeHandler(event, field)
+      }
+
+      function componentBlurHandler(event: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) {
+        blurHandler(event, field)
+      }
+
+      return inputComponentTypes.includes(type) ? <input
         {...field}
         className="input__control"
         id={actualId}
         type={htmlType}
-        onChange={(event) => changeHandler(event, field)}
-        onBlur={(event) => blurHandler(event, field)}
+        onChange={componentChangeHandler}
+        onBlur={componentBlurHandler}
         disabled={disabled}
         value={formattedValue}
-      />
+      /> :
+        <textarea
+          {...field}
+          className="input__control"
+          id={actualId}
+          onChange={componentChangeHandler}
+          onBlur={componentBlurHandler}
+          disabled={disabled}
+          value={formattedValue}
+        />
     }, [id, type, disabled, formattedValue])
 
 
