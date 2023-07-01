@@ -3,7 +3,7 @@ import { formatNumber } from "../../lib/formatNumber/formatNumber";
 import { dateFormatter } from "shared/lib/dateFormatter/dateFormatter";
 
 export class TableService {
-  public formatText(value: any, dataType?: "number" | "text" | "date" | "percent") {
+  public formatText(value: any, dataType?: "number" | "text" | "date" | "percent" | "progress") {
     switch (dataType) {
       case "number":
         return formatNumber(Number(value));
@@ -11,6 +11,8 @@ export class TableService {
         return dateFormatter(value, "d.m.y");
       case "percent":
         return `${value}%`;
+      case "progress": 
+        return (value[0] / value[1]) * 100
       default: return value;
     }
   }

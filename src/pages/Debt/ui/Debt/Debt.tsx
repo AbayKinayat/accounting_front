@@ -5,7 +5,6 @@ import { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import { useAppDispatch } from "shared/hooks/useAppDispatch/useAppDispatch";
 import { IDebt, fetchDebts, getDebtsData, getDebtsError, getDebtsLoading } from "entities/Debt";
 import { useSelector } from "react-redux";
-import { IContextMenuRef } from "shared/types/IContextMenuRef";
 import { AddDebtModal } from "features/AddDebtModal";
 import { DebtTableGroup } from "./DebtTableGroup/DebtTableGroup";
 import { EditDebtModal } from "features/EditDebtModal";
@@ -40,6 +39,12 @@ const columns: ITableColumn[] = [
     name: "По",
     dataType: "date",
     width: 200,
+  },
+  {
+    field: "progress",
+    name: "Прогресс",
+    dataType: "progress",
+    width: 300
   }
 ]
 
@@ -88,6 +93,7 @@ const Debt = () => {
   }, [openCreateDebt])
 
   const selectDebtHandler = useCallback((debt: IDebt) => {
+    console.log(debt)
     setCurrentDebt(debt)
     setIsEditOpen(true);
   }, [])
