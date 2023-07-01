@@ -1,5 +1,6 @@
 import { memo } from "react";
 import "./ProgressBar.scss";
+import classNames from "classnames";
 
 interface ProgressBarProps {
   value: number,
@@ -7,19 +8,25 @@ interface ProgressBarProps {
 }
 
 const ProgressBar = memo<ProgressBarProps>(({ value, maxValue }) => {
-  const progress = (value / maxValue) * 100;
+
+  let progress = Math.trunc((value || 1) / (maxValue || 1) * 100);
+
+  console.log("progress", progress);
+  console.log("progress", value);
+  console.log("progress", maxValue);
 
   return (
-    <div className="progress-bar">
-      <div className="progress-bar__bar">
+    <div className="progress-bar" title={maxValue ? `${progress}%` : undefined}>
+      {maxValue ? <div className="progress-bar__bar">
         <div
-          className="progress-bar__bar-value"
+          className={classNames("progress-bar__bar-value", { "progress-bar__bar-value_error": maxValue < value })}
           style={{
             width: `${progress}%`,
           }}
         />
-      </div>
-      <span className="progress-bar__percent">{`${progress}%`}</span>
+      </div> : null}
+
+      <span className="progress-bar__percent">{value} / {maxValue}</span>
     </div>
   );
 })

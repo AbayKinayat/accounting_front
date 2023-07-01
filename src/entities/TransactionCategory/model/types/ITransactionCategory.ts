@@ -5,5 +5,8 @@ export interface ITransactionCategory {
   typeId: number,
   createdAt: string,
   updatedAt: string,
-  color: string
+  color: string,
+  sum: number,
+  budget: number,
+  budgetProgress: [number, number]
 }
