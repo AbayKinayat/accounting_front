@@ -8,9 +8,6 @@ import { ITransaction, fetchTransactions, getTransactionsData, transactionsActio
 import ruLocale from '@fullcalendar/core/locales/ru';
 import { useAppDispatch } from "shared/hooks/useAppDispatch/useAppDispatch";
 import { editTransaction } from "features/EditTransactionModal";
-
-import "./TransactionsCalendar.scss";
-import { formatNumber } from "shared/lib/formatNumber/formatNumber";
 import { Currency } from "shared/ui/Currency/Currency";
 
 const plugins = [dayGridPlugin, interactionPlugin];

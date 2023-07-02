@@ -1,8 +1,10 @@
-import { memo } from "react";
+import { memo, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Select } from "shared/ui/Select/Select";
 import { getTransactionCategoryData } from "../../model/selectors/getTransactionCategoryData";
 import { Control, FieldPath, FieldValues, RegisterOptions } from "react-hook-form";
+import { useAppDispatch } from "shared/hooks/useAppDispatch/useAppDispatch";
+import { fetchTransactionCategories } from "entities/TransactionCategory/model/services/fetchTransactionCategories";
 
 interface TransactionCategorySelectProps {
   control: Control<any>,
@@ -18,6 +20,13 @@ export const TransactionCategorySelect = memo<TransactionCategorySelectProps>(({
   disabled
 }) => {
   const transactionCategories = useSelector(getTransactionCategoryData);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (!transactionCategories.length) {
+      dispatch(fetchTransactionCategories());
+    }
+  }, [])
 
   return <>
     <Select

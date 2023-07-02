@@ -12,8 +12,6 @@ import { Input } from "shared/ui/Input/Input";
 import { Datepicker } from "shared/ui/Datepicker/Datepicker";
 import { dateToUt } from "shared/lib/dateToUt/dateToUt";
 
-import "./AddTransactionModal.scss";
-
 const modalStyles: Modal.Styles = {
   content: {
     left: "50%",

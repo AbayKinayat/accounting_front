@@ -4,7 +4,6 @@ import { TableItem } from "./TableItem/TableItem";
 import { ITableColumn } from "../../types/ITable";
 import { ISort } from "../../types/ISort";
 import { TableService } from "./TableService";
-import "./Table.scss";
 import classNames from "classnames";
 import { checkTypesAndSort } from "shared/lib/checkTypesAndSort/checkTypesAndSort";
 import { ContextMenuItem } from "../ContextMenuItem/ContextMenuItem";

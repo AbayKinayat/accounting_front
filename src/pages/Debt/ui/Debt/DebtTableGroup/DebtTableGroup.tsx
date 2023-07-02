@@ -1,6 +1,5 @@
 import { memo } from "react";
 import type { ITableColumn } from "shared/types/ITable";
-import "./DebtTableGroup.scss";
 
 interface DebtTableGroupProps {
   items: Record<string, any>[],

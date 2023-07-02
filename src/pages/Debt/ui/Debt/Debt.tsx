@@ -1,5 +1,4 @@
 import { Table } from "shared/ui/Table/Table";
-import "./Debt.scss";
 import { ITableColumn } from "shared/types/ITable";
 import { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import { useAppDispatch } from "shared/hooks/useAppDispatch/useAppDispatch";

@@ -1,6 +1,5 @@
 import { forwardRef, memo, useEffect, useState } from "react";
 import { generateUid } from "shared/lib/generatedUid/genearateUid";
-import "./Checkbox.scss";
 import classNames from "classnames";
 
 interface CheckboxProps {

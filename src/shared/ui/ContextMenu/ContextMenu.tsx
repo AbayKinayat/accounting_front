@@ -1,5 +1,4 @@
 import { memo, useState, type ReactNode, useEffect, useImperativeHandle, forwardRef, useRef } from "react";
-import "./ContextMenu.scss";
 import { Instance, createPopper, popper } from "@popperjs/core";
 import { IContextMenuRef } from "shared/types/IContextMenuRef";
 import classNames from "classnames";

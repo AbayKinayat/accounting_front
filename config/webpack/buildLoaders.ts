@@ -19,8 +19,14 @@ export function buildLoaders(options: IBuildOptions): RuleSetRule[]  {
     exclude: /node_modules/,
   };
 
+  const rawLoader = {
+    test: /\.css$/i,
+    use: 'raw-loader',
+  }
+
   return [
     tsLoader,
     cssLoader,
+    rawLoader
   ]
 }

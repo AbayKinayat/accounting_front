@@ -1,8 +1,6 @@
 import { memo, useMemo } from "react";
-import "./TransactionGroup.scss";
 import { ITableColumn } from "shared/types/ITable";
 import classNames from "classnames";
-import { formatNumber } from "shared/lib/formatNumber/formatNumber";
 import { Currency } from "shared/ui/Currency/Currency";
 
 interface ITransactionGroup {

@@ -2,8 +2,6 @@ import { memo } from "react";
 import classNames from "classnames";
 import { formatNumber } from "shared/lib/formatNumber/formatNumber";
 
-import "./Currency.scss";
-
 interface CurrencyProps {
   children?: number,
   className?: string

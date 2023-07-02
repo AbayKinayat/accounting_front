@@ -1,9 +1,8 @@
 import { memo, useCallback, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import Modal from "react-modal";
 import { Datepicker } from "shared/ui/Datepicker/Datepicker";
 import { Input } from "shared/ui/Input/Input";
-import "./AddDebtModal.scss";
 import { Button } from "shared/ui/Button/Button";
 import { $api } from "shared/api/api";
 import { IDebtCreateForm } from "../../model/types/IDebtCreateForm";
@@ -11,7 +10,6 @@ import { IDebtCreate } from "../../model/types/IDebtCreate";
 import { useSnackbar } from "notistack";
 import { useAppDispatch } from "shared/hooks/useAppDispatch/useAppDispatch";
 import { fetchDebts } from "entities/Debt";
-import { Checkbox } from "shared/ui/Checkbox/Checkbox";
 import { FormCheckbox } from "shared/form-ui/FormCheckbox/FormCheckbox";
 
 interface AddDebtModalProps {

@@ -6,7 +6,6 @@ import { $api } from "shared/api/api";
 import { useAppDispatch } from "shared/hooks/useAppDispatch/useAppDispatch";
 import { Button } from "shared/ui/Button/Button";
 import { Input } from "shared/ui/Input/Input";
-import "./EditBudgetModal.scss";
 import { ITransactionCategory, fetchTransactionCategories } from "entities/TransactionCategory";
 import ProgressBar from "shared/ui/ProgressBar/ProgressBar";
 import { Icon } from "shared/ui/Icon/Icon";

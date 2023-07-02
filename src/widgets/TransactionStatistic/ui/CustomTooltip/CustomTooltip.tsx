@@ -1,5 +1,4 @@
 import { TooltipProps } from "recharts";
-import "./CustomTooltip.scss";
 import { ValueType } from "recharts/types/component/DefaultTooltipContent";
 import {  useMemo } from "react";
 import { formatNumber } from "shared/lib/formatNumber/formatNumber";

@@ -1,7 +1,6 @@
 import { TooltipProps } from "recharts";
 import { ValueType } from "recharts/types/component/DefaultTooltipContent";
 import { formatNumber } from "shared/lib/formatNumber/formatNumber";
-import "./ReviewTooltip.scss";
 
 export const ReviewTooltip = ((props: TooltipProps<ValueType, string | number>) => {
   const { active, payload, label } = props;

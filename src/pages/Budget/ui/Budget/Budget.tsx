@@ -3,7 +3,6 @@ import { ITableColumn } from "shared/types/ITable";
 import { useSelector } from "react-redux";
 import { ITransactionCategory, fetchTransactionCategories, getTransactionCategoryData } from "entities/TransactionCategory";
 import { Table } from "shared/ui/Table/Table";
-import "./Budget.scss";
 import { useAppDispatch } from "shared/hooks/useAppDispatch/useAppDispatch";
 import { EditBudgetModal } from "features/EditBudgetModal";
 import { getTransactionsEndUt, getTransactionsStartUt } from "entities/Transaction";

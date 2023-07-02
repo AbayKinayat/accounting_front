@@ -1,6 +1,5 @@
 import { ReactNode, memo } from "react";
 import classNames from "classnames";
-import "./Alert.scss";
 
 interface AlertProps {
   type?: "error" | "info" | "warning",

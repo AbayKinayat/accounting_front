@@ -1,5 +1,4 @@
 import { FC, useCallback, useEffect, useState } from "react";
-import "./Welcome.scss";
 import { AuthForm } from "../AuthForm/AuthForm";
 import { RegisterForm } from "../RegisterForm/RegisterForm";
 import { Button } from "shared/ui/Button/Button";

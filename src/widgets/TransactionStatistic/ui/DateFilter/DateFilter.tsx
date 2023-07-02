@@ -1,6 +1,5 @@
 import { memo, useCallback, useMemo } from "react";
 import { Button } from "shared/ui/Button/Button";
-import "./DateFilter.scss";
 import { dateFormatter } from "shared/lib/dateFormatter/dateFormatter";
 import { dateToUt } from "shared/lib/dateToUt/dateToUt";
 import { DateFilterType } from "../../types/DateFilterType";
