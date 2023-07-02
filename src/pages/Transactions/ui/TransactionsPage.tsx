@@ -6,7 +6,6 @@ import { useAppDispatch } from "shared/hooks/useAppDispatch/useAppDispatch";
 import { ITransaction, fetchTransactions, getTransactionsData, getTransactionsEndUt, getTransactionsPage, getTransactionsSortField, getTransactionsSortOrder, getTransactionsStartUt, getTransactionsTotal, transactionsActions } from "entities/Transaction";
 
 import { TransactionGroup } from "./TransactionGroup";
-import "./TransactionsPage.scss";
 import { useSearchParams } from "react-router-dom";
 import { ITableColumn } from "shared/types/ITable";
 import { fetchTransactionCategories } from "entities/TransactionCategory";

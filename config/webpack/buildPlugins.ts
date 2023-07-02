@@ -1,4 +1,4 @@
-import { WebpackPluginInstance } from "webpack";
+import { DefinePlugin, WebpackPluginInstance } from "webpack";
 import { IBuildOptions } from "../types/IBuildOptions";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import HtmlWebpackPlugin from "html-webpack-plugin"
@@ -8,7 +8,10 @@ export function buildPlugins(options: IBuildOptions): WebpackPluginInstance[] {
     new HtmlWebpackPlugin({
       title: "Accounting",
       template: options.paths.html
-    })
+    }),
+    new DefinePlugin({
+      __IS_DEV__: JSON.stringify(options.mode === "development"),
+    }),
   ]
 
   if (options.mode !== "development")

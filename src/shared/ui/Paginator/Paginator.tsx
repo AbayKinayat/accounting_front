@@ -1,5 +1,4 @@
 import { Fragment, memo, useMemo } from "react";
-import "./Paginator.scss";
 import { Button } from "../Button/Button";
 
 interface PaginatorProps {

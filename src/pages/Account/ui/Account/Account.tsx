@@ -1,5 +1,4 @@
 import { FC, useCallback, useEffect, useState } from "react";
-import "./Account.scss";
 import { useSelector } from "react-redux";
 import { fetchCurrentUser, getUserData, userActions } from "entities/User";
 import { useAppDispatch } from "shared/hooks/useAppDispatch/useAppDispatch";
@@ -9,8 +8,6 @@ import { Input } from "shared/ui/Input/Input";
 import { $api } from "shared/api/api";
 import { useSnackbar } from "notistack";
 import { Currency } from "shared/ui/Currency/Currency";
-
-
 
 const Account: FC = () => {
   const user = useSelector(getUserData);

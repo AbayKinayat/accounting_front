@@ -1,7 +1,6 @@
-import { FC, memo } from "react"
+import { memo } from "react"
 import { Button } from "shared/ui/Button/Button"
 import { Input } from "shared/ui/Input/Input"
-import "./AuthForm.scss";
 import { useForm } from "react-hook-form";
 import { useAppDispatch } from "shared/hooks/useAppDispatch/useAppDispatch";
 import { IUserCreate, authByUsername, getUserError, getUserLoading } from "entities/User";

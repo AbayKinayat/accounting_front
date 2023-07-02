@@ -1,6 +1,5 @@
 import { ButtonHTMLAttributes, ReactNode, forwardRef, memo } from "react";
 import classNames from "classnames";
-import "./Button.scss";
 import { Icon } from "../Icon/Icon";
 
 

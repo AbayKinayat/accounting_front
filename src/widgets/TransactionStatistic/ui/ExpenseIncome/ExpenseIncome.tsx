@@ -1,6 +1,5 @@
 import { memo } from "react";
 import { Button } from "shared/ui/Button/Button";
-import "./ExpenseIncome.scss";
 
 interface ExpenseIncomeProps {
   typeId: number,

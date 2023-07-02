@@ -1,5 +1,4 @@
 import React, { memo, type ReactNode } from "react";
-import "./ContextMenuItem.scss";
 
 interface ContextMenuItemProps {
   children: ReactNode,

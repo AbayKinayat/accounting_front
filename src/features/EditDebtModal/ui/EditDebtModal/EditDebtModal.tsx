@@ -9,7 +9,6 @@ import { Button } from "shared/ui/Button/Button";
 import { FormCheckbox } from "shared/form-ui/FormCheckbox/FormCheckbox";
 import { Input } from "shared/ui/Input/Input";
 import { Datepicker } from "shared/ui/Datepicker/Datepicker";
-import "./EditDebtModal.scss";
 
 interface EditDebtModalProps {
   isOpen: boolean,

@@ -1,5 +1,4 @@
 import { FC, useEffect, useState, useCallback } from "react";
-import "./Categories.scss";
 import { fetchTransactionCategories, getTransactionCategoryData } from "entities/TransactionCategory";
 import { useAppDispatch } from "shared/hooks/useAppDispatch/useAppDispatch";
 import { Table } from "shared/ui/Table/Table";

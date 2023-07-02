@@ -1,7 +1,6 @@
 import { ReactElement, memo, useCallback, useRef } from "react";
 import { Control, Controller, ControllerRenderProps, FieldPath, FieldValues, RegisterOptions } from "react-hook-form";
 import DatepickerBase from "react-datepicker";
-import "./Datepicker.scss";
 import { generateUid } from "shared/lib/generatedUid/genearateUid";
 
 interface DatepickerProps {

@@ -6,7 +6,6 @@ import { Control, Controller } from "react-hook-form";
 import { Rules } from "shared/types/Rules";
 import type { FormRenderComponent } from "shared/types/FormRenderComponent";
 import type { FormRenderField } from "shared/types/FormRenderField";
-import "./Input.scss";
 
 type InputType = "string" | "password" | "currency" | "text"
 

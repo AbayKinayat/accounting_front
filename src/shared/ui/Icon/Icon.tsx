@@ -1,6 +1,5 @@
 import { memo } from "react";
 import classNames from "classnames";
-import "./Icon.scss";
 
 interface IconProps {
   name: string;

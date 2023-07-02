@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import Modal from "react-modal";
 import { useSnackbar } from "notistack";
-import { ITransaction, ITransactionCreate, ITransactionCreateForm, fetchTransactions, getTransactionsEditId, getTransactionsEditIsOpen, getTransactionsIsOpen, transactionsActions } from "entities/Transaction";
+import { ITransaction, ITransactionCreateForm, fetchTransactions, getTransactionsEditId, getTransactionsEditIsOpen, getTransactionsIsOpen, transactionsActions } from "entities/Transaction";
 import { TransactionCategorySelect } from "entities/TransactionCategory";
 import { useAppDispatch } from "shared/hooks/useAppDispatch/useAppDispatch";
 import { Button } from "shared/ui/Button/Button";
@@ -13,8 +13,6 @@ import { dateToUt } from "shared/lib/dateToUt/dateToUt";
 import { $api } from "shared/api/api";
 import { editTransaction } from "../../model/services/editTransaction";
 import { removeTransaction } from "../../model/services/removeTransaction";
-
-import "./EditTranscationModal.scss";
 
 const modalStyles: Modal.Styles = {
   content: {

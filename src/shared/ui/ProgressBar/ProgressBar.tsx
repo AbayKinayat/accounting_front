@@ -1,5 +1,4 @@
 import { memo } from "react";
-import "./ProgressBar.scss";
 import classNames from "classnames";
 
 interface ProgressBarProps {

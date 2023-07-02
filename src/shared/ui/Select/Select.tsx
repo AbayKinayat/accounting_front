@@ -6,7 +6,6 @@ import SelectBase, { components, type OptionProps, type GroupBase, type CSSObjec
 import { type Control, Controller } from "react-hook-form";
 import { FormRenderComponent } from "shared/types/FormRenderComponent";
 import { Rules } from "shared/types/Rules";
-import "./Select.scss";
 
 interface SelectProps {
   label?: string,
@@ -60,7 +59,17 @@ const getValueContainerStyle = () => ({
   padding: "0 8px",
 })
 
-const getMenuPortalClassName = () => "select__menu-portal"
+const getMenuPortalClassName = () => "select__menu-portal";
+const getMenuListClassName = () => "select__menu-list";
+const getSelectOptionClassName = ({ isFocused, isSelected }: { isFocused: boolean, isSelected: boolean }) => classNames("select__option", {
+  "select__option_focus": isFocused,
+  "select__option_selected": isSelected,
+});
+const getSelectInputControlClassName = () => "select__input-control";
+const getSelectControlClassName = ({ isFocused }: { isFocused: boolean }) => classNames("select__control", {
+  'select__control_focused': isFocused
+}) ;
+const getSelectSingleValueClassName = () => "select__single-value"
 
 export const Select = memo<SelectProps>(({
   options,
@@ -81,7 +90,7 @@ export const Select = memo<SelectProps>(({
 
   const getOptionLabel = useCallback((option: Record<string, any>) => option[optionLabel], [optionLabel]);
   const getOptionValue = useCallback((option: Record<string, any>) => {
-    
+
     return option[optionValue]
   }, [optionValue]);
 
@@ -98,7 +107,12 @@ export const Select = memo<SelectProps>(({
       getOptionValue={getOptionValue}
       isClearable
       classNames={{
-        menuPortal: getMenuPortalClassName
+        menuPortal: getMenuPortalClassName,
+        menuList: getMenuListClassName,
+        option: getSelectOptionClassName,
+        input: getSelectInputControlClassName,
+        control: getSelectControlClassName,
+        singleValue: getSelectSingleValueClassName
       }}
       styles={{
         option: getSelectOptionStyle,
@@ -131,6 +145,6 @@ export const Select = memo<SelectProps>(({
       render={RenderComponent}
       rules={rules}
     />
-    
+
   </div>
 })

@@ -1,5 +1,4 @@
 import classNames from "classnames";
-import "./Header.scss";
 import { memo, useCallback } from "react";
 import { NavLink } from "react-router-dom";
 import { Button } from "shared/ui/Button/Button";
@@ -7,6 +6,7 @@ import { useAppDispatch } from "shared/hooks/useAppDispatch/useAppDispatch";
 import { logout } from "entities/User";
 import { transactionsActions } from "entities/Transaction";
 import { DateFilter } from "../DateFilter/DateFilter";
+import { Theme } from "shared/ui/Theme/Theme";
 
 interface HeaderProps {
   className?: string
@@ -28,7 +28,7 @@ export const Header = memo<HeaderProps>(({ className }) => {
 
     <NavLink className="header-menu-item" to="/">
       <Button
-        className="header__button"
+        className="header__button header__button__transactions"
         icon="transactions"
         mod="icon"
       >
@@ -103,6 +103,8 @@ export const Header = memo<HeaderProps>(({ className }) => {
     </Button>
 
     <DateFilter />
+
+    <Theme />
 
     <Button
       className="header__button header-menu-item"

@@ -2,7 +2,6 @@ import { memo, useCallback } from "react"
 import { Input } from "shared/ui/Input/Input"
 import { Button } from "shared/ui/Button/Button"
 import { useForm } from "react-hook-form";
-import "./RegisterForm.scss"
 import { IUserCreate, getUserError, getUserLoading, registerByUsername } from "entities/User";
 import { useAppDispatch } from "shared/hooks/useAppDispatch/useAppDispatch";
 import { useSelector } from "react-redux"
