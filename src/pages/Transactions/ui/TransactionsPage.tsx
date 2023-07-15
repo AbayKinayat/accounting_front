@@ -9,6 +9,9 @@ import { TransactionGroup } from "./TransactionGroup";
 import { useSearchParams } from "react-router-dom";
 import { ITableColumn } from "shared/types/ITable";
 import { fetchTransactionCategories } from "entities/TransactionCategory";
+import { Input } from "shared/ui/Input/Input";
+import { useForm } from "react-hook-form";
+import { debounce } from "shared/lib/debounce/debounce";
 
 const columns: ITableColumn[] = [
   {
@@ -36,7 +39,6 @@ const columns: ITableColumn[] = [
     dataType: "number"
   }
 ]
-
 const TransactionsPage: FC = () => {
   const dispatch = useAppDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -46,12 +48,19 @@ const TransactionsPage: FC = () => {
   const transactionsTotal = useSelector(getTransactionsTotal);
   const sortField = useSelector(getTransactionsSortField);
   const sortOrder = useSelector(getTransactionsSortOrder);
-  const startUt = useSelector(getTransactionsStartUt);
-  const endUt = useSelector(getTransactionsEndUt);
+  const startUt = useSelector(getTransactionsStartUt)
+  const endUt = useSelector(getTransactionsEndUt)
 
-  const getTransactions = () => {
-    dispatch(fetchTransactions());
-  }
+  const { control, watch } = useForm<{ search: string }>({
+    defaultValues: { search: "" }
+  });
+
+  const search = watch("search", "");
+
+  const getTransactions = useCallback(
+    debounce((search?: string) => {
+      dispatch(fetchTransactions(search));
+    }), [])
 
   const sortChange = useCallback((field: string, order: number) => {
     dispatch(transactionsActions.setSortField(field));
@@ -82,8 +91,7 @@ const TransactionsPage: FC = () => {
       ));
 
     dispatch(transactionsActions.setIsPagination(true));
-
-    getTransactions();
+    dispatch(fetchTransactionCategories());
 
     dispatch(transactionsActions.setGetTransactionsWhenCreate(true));
 
@@ -94,13 +102,14 @@ const TransactionsPage: FC = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(fetchTransactionCategories());
-  }, [])
+    getTransactions(search);
+  }, [search, startUt, endUt]);
 
   return <div className="transactions-page">
     <h1 className="transactions-page__title">
       Транзакции
     </h1>
+    <Input className="transactions-page__search" control={control} name="search" label="Поиск" />
     <Table
       className="transactions-page__table"
       groupBy="date"
