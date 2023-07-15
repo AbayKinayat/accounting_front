@@ -4,11 +4,11 @@ import { FetchTransactionsReturn } from "../types/FetchTransactionsReturn";
 
 export const fetchTransactions = createAsyncThunk<
   FetchTransactionsReturn,
-  void,
+  string | void,
   ThunkConfig<string>
 >(
   "transactions/fetchTransactions",
-  async (_, { extra, rejectWithValue, getState }) => {
+  async (search, { extra, rejectWithValue, getState }) => {
     try {
       const { page, limit, sortField, sortOrder, startUt, endUt, isPagination } = getState().transactions;
 
@@ -17,6 +17,7 @@ export const fetchTransactions = createAsyncThunk<
         sortOrder, 
         startUt, 
         endUt,
+        search
       }
 
       if (isPagination) Object.assign(actualBody, { page, limit });

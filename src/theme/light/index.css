@@ -482,6 +482,10 @@ template {
   margin: 0;
   margin-bottom: 20px;
 }
+.transactions-page__search {
+  max-width: 500px;
+  margin-bottom: 10px;
+}
 
 .transaction-group {
   background: var(--gray-light);

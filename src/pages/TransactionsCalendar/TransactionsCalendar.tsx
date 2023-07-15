@@ -14,13 +14,13 @@ const plugins = [dayGridPlugin, interactionPlugin];
 
 function EventContent({ event, backgroundColor }: EventContentArg) {
   return <div className="transactions-calendar__event">
-    <div className="transactions-calendar__event-circle" style={{ background: backgroundColor}}>
+    <div className="transactions-calendar__event-circle" style={{ background: backgroundColor }}>
     </div>
     <div className="transactions-calendar__event-title">
       {event.title}
     </div>
     <Currency className="transactions-calendar__event-amount">
-      { Number(event.extendedProps.amount) }
+      {Number(event.extendedProps.amount)}
     </Currency>
   </div>
 }
@@ -39,7 +39,7 @@ const TransactionsCalendar = () => {
     transactions.forEach(transaction => {
       const date = new Date(transaction.date * 1000);
       if (!map[date.toISOString()]) map[date.toISOString()] = 0;
-      map[date.toISOString()] += Number(transaction.amount); 
+      map[date.toISOString()] += Number(transaction.amount);
     })
 
     return map;
@@ -86,7 +86,7 @@ const TransactionsCalendar = () => {
     }))
 
     fetchCalendarTransactions()
-  }, [])
+  }, [start, end])
 
   const eventClickHandler = useCallback((event: EventClickArg) => {
     const transaction = event.event.extendedProps as ITransaction;
@@ -100,14 +100,17 @@ const TransactionsCalendar = () => {
   }, [])
 
   const dayCellContent = useCallback(({ dayNumberText, date }: DayCellContentArg) => {
-      const amount = eventsAmounts[date.toISOString()];
-      return <div className="transactions-calendar__date-cell">
-        <Currency>
-          {amount}
-        </Currency>
-        <div className="transactions-calendar__date-text">{dayNumberText}</div> 
-      </div>
-  }, [eventsAmounts])
+    const amount = eventsAmounts[date.toISOString()];
+
+    console.log("dayCellContent")
+
+    return <div className="transactions-calendar__date-cell">
+      <Currency>
+        {amount}
+      </Currency>
+      <div className="transactions-calendar__date-text">{dayNumberText}</div>
+    </div>
+  }, [eventsAmounts, transactions])
 
   useEffect(() => {
     dispatch(transactionsActions.setIsPagination(false));
@@ -120,6 +123,10 @@ const TransactionsCalendar = () => {
       dispatch(transactionsActions.setGetTransactionsWhenCreate(false));
     }
   }, [])
+
+  useEffect(() => {
+    console.log("transactions change", transactions)
+  }, [transactions]);
 
   return <div className="transactions-calendar">
     <FullCalendar

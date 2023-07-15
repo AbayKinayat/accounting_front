@@ -84,7 +84,7 @@ export const EditTransactionModal = memo(() => {
         })
       }
     });
-  }, []);
+  }, [id]);
 
   const closeModal = useCallback(() => {
     dispatch(transactionsActions.setEditIsOpen(false));
