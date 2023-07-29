@@ -16,6 +16,24 @@
 
 Приложение еще находится в разработке, и я буду рад вашим отзывам и предложениям. Скоро оно будет доступно для публичного использования, и вы сможете оценить все его преимущества.
 
+Применяемые технологии
+1. React 18
+2. Wepback 5
+3. TypeScript
+4. Redux Toolkit
+5. Архитектура Feature sliced design [Link](https://feature-sliced.design/docs)
+6. Axios
+7. React Hook Form
+8. Popper js
+9. Classnames
+10. Notistack
+11. @fullcalendar/core
+12. react-modal
+13. react-select
+14. react-datepicker
+15. recharts
+16. Sass
+
 ![Статистика график](https://github.com/AbayKinayat/accounting_front/assets/74435594/c6b1b7a5-39dd-41cc-82f9-2ffd39ee0784)
 ![Статистика обзор](https://github.com/AbayKinayat/accounting_front/assets/74435594/b1ad698a-f047-47d9-b197-c559feba2252)
 ![Категории](https://github.com/AbayKinayat/accounting_front/assets/74435594/cf7fb54f-a2c7-48f7-9f61-9c28778bd39d)
