@@ -1,3 +1,3 @@
 export function dateToUt(date: Date) {
-  return date.getTime() / 1000;
+  return Math.trunc(date.getTime() / 1000);
 }
