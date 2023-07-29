@@ -24,6 +24,8 @@ const modalStyles: Modal.Styles = {
 
 const requiredRule = { required: true }
 
+const descriptionInputProps = { autoFocus: true };
+
 export const AddTransactionModal = memo(() => {
   const dispatch = useAppDispatch();
   const isOpen = useSelector(getTransactionsIsOpen);
@@ -140,6 +142,7 @@ export const AddTransactionModal = memo(() => {
             control={control}
             rules={requiredRule}
             disabled={loading}
+            inputProps={descriptionInputProps}
           />
           <Input
             label="Сумма"

@@ -1,4 +1,4 @@
-import { memo, useRef, useMemo, useCallback, type ChangeEvent, useState, FocusEvent } from "react";
+import { memo, useRef, useMemo, useCallback, type ChangeEvent, useState, FocusEvent, HTMLAttributes } from "react";
 import { generateUid } from "shared/lib/generatedUid/genearateUid";
 import classNames from "classnames";
 import { formatNumber } from "shared/lib/formatNumber/formatNumber";
@@ -10,15 +10,16 @@ import type { FormRenderField } from "shared/types/FormRenderField";
 type InputType = "string" | "password" | "currency" | "text"
 
 interface InputProps {
-  label?: string,
   id?: string,
+  label?: string,
   name: string,
   type?: InputType,
   className?: string,
   disabled?: boolean,
   onBlur?: (event: FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {},
   control: Control<any>,
-  rules?: Rules
+  rules?: Rules,
+  inputProps?: HTMLAttributes<HTMLInputElement> | HTMLAttributes<HTMLTextAreaElement>
 }
 
 const inputComponentTypes = ["string", "password", "currency"];
@@ -33,7 +34,8 @@ export const Input = memo<InputProps>(
     onBlur,
     disabled,
     control,
-    rules
+    rules,
+    inputProps
   }, ref) => {
     const generatedId = useRef(generateUid());
     const actualId = id || generatedId.current;
@@ -96,6 +98,7 @@ export const Input = memo<InputProps>(
         className="input__control"
         id={actualId}
         type={htmlType}
+        {...inputProps as HTMLAttributes<HTMLInputElement>}
         onChange={componentChangeHandler}
         onBlur={componentBlurHandler}
         disabled={disabled}
@@ -103,6 +106,7 @@ export const Input = memo<InputProps>(
       /> :
         <textarea
           {...field}
+          {...inputProps as HTMLAttributes<HTMLTextAreaElement>}
           className="input__control"
           id={actualId}
           onChange={componentChangeHandler}
@@ -110,7 +114,7 @@ export const Input = memo<InputProps>(
           disabled={disabled}
           value={formattedValue}
         />
-    }, [id, type, disabled, formattedValue])
+    }, [id, type, disabled, formattedValue, inputProps])
 
 
 
